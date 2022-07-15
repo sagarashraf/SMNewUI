@@ -103,6 +103,7 @@ var medicalP = 0.6;
 
 var values = [];
 for(i=0;i<=values;i++){
+
     
 }
 
@@ -111,3 +112,4 @@ for(i=0;i<=values;i++){
 
 
 
+ 
