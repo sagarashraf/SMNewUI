@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@formulajs/formulajs": "^3.1.4",
     "express": "^4.18.1",
     "formulajs": "^1.0.8",
     "moment": "^2.29.4",
