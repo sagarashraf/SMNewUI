@@ -4,10 +4,11 @@ import { Container } from "react-bootstrap";
 import { Calculator } from "./components/calculator/Calculator";
 
 function App() {
+	const BG = { backgroundColor: "#ecf9d5" };
 	return (
-		<Container>
+		<div style={BG}>
 			<Calculator />
-		</Container>
+		</div>
 	);
 }
 
