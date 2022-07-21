@@ -28,7 +28,7 @@ export const INFRACTIONS = [
 	"4 Infractions in a year",
 	"5 Infractions in a year",
 ];
-
+export const MERRIAGE = ["Yes", "No", "Divorced", "Separated"];
 export const BANK_CUR = ["Open", "Discharged"];
 export const CREDIT_CARD = [
 	"Poor (300-549)",
@@ -37,4 +37,3 @@ export const CREDIT_CARD = [
 	"Good (680-719)",
 	"Great (720-850)",
 ];
-export const MERRIAGE = ["Yes", "No", "Divorced", "Separated"];
