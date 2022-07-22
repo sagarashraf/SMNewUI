@@ -883,7 +883,7 @@ export const Calculator = (props) => {
 						</Form.Select>
 					</Form.Group>
 
-					<Form.Group as={Col} controlId='formGridPassword'>
+					<Form.Group as={Col} sm={6} xs={12} controlId='formGridPassword'>
 						<Form.Label className='fw-bolder'>
 							What portions of Fruits or vegetables do you intake?
 						</Form.Label>
@@ -902,7 +902,7 @@ export const Calculator = (props) => {
 					</Form.Group>
 				</Row>
 				<Row className='mb-3'>
-					<Form.Group as={Col} controlId='formGridEmail'>
+					<Form.Group as={Col} sm={6} xs={12} controlId='formGridEmail'>
 						<Form.Label className='fw-bolder'>
 							Any physical disabilities?
 						</Form.Label>
@@ -920,7 +920,7 @@ export const Calculator = (props) => {
 						</Form.Select>
 					</Form.Group>
 
-					<Form.Group as={Col} controlId='formGridPassword'>
+					<Form.Group as={Col} sm={6} xs={12} controlId='formGridPassword'>
 						<Form.Label className='fw-bolder'>
 							Do you Smoke including Marijuana or any other tobacco
 						</Form.Label>
@@ -939,7 +939,7 @@ export const Calculator = (props) => {
 					</Form.Group>
 				</Row>
 				<Row className='mb-3'>
-					<Form.Group as={Col} controlId='formGridEmail'>
+					<Form.Group as={Col} sm={6} xs={12} controlId='formGridEmail'>
 						<Form.Label className='fw-bolder'>
 							Do you consume Alcohol?
 						</Form.Label>
@@ -957,7 +957,7 @@ export const Calculator = (props) => {
 						</Form.Select>
 					</Form.Group>
 
-					<Form.Group as={Col} controlId='formGridPassword'>
+					<Form.Group as={Col} sm={6} xs={12} controlId='formGridPassword'>
 						<Form.Label className='fw-bolder'>
 							Any history of drug abuse now or in the past?
 						</Form.Label>
