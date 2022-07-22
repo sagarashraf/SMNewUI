@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Row, Col, Alert, Container } from "react-bootstrap";
 import {
 	ALCHOHOL,
@@ -18,6 +18,38 @@ import {
  **/
 
 export const Calculator = (props) => {
+	const [cancer, setCancer] = useState("");
+	const [show, setshow] = useState(false);
+	const [cancerlevel, setCancerlevel] = useState("");
+	const [bp, setBP] = useState("");
+	const [bplevel, setBPlevel] = useState("");
+	const [cholestoral, setCholestoral] = useState("");
+	const [cholestorallevel, setCholestorallevel] = useState("");
+	const [asthma, setAsthma] = useState("");
+	const [asthmalevel, setAsthmalevel] = useState("");
+	const [diabetes, setDiabetes] = useState("");
+	const [diabeteslevel, setDiabeteslevel] = useState("");
+	const [liver, setLiver] = useState("");
+	const [liverlevel, setLiverlevel] = useState("");
+	const [kidney, setKidney] = useState("");
+	const [kidneylevel, setKidneylevel] = useState("");
+	const [apnea, setApnea] = useState("");
+	const [apnealevel, setApnealevel] = useState("");
+	const [bipolar, setBipolar] = useState("");
+	const [bipolarlevel, setBipolarlevel] = useState("");
+	const [neurological, setNeurological] = useState("");
+	const [neurologicallevel, setNeurologicallevel] = useState("");
+	const [psychiatric, setPsychiatric] = useState("");
+	const [psychiatriclevel, setPsychiatriclevel] = useState("");
+	const [anxiety, setAnxiety] = useState("");
+	const [anxietylevel, setAnxietylevel] = useState("");
+	const [heart, setHeart] = useState("");
+	const [heartlevel, setHeartlevel] = useState("");
+	console.log(cancer);
+	const test = (input) => {
+		setCancer(input);
+		setshow(!show);
+	};
 	return (
 		<Container className='mt-3'>
 			<Row>
@@ -230,7 +262,11 @@ export const Calculator = (props) => {
 						<Form.Label className='fw-bolder'>
 							Have you ever been diagnosed with Cancer?
 						</Form.Label>
-						<Form.Select aria-label='Default select example'>
+						<Form.Select
+							value={cancer}
+							onChange={(e) => test(e.target.value)}
+							name='cancer'
+							aria-label='Default select example'>
 							<option selected disabled>
 								Select an Option
 							</option>
@@ -242,23 +278,25 @@ export const Calculator = (props) => {
 								);
 							})}
 						</Form.Select>
-						<Form.Group as={Col} controlId='formGridEmail'>
-							<Form.Label className='fw-bolder'>
-								If Yes, in how many years?
-							</Form.Label>
-							<Form.Select aria-label='Default select example'>
-								<option selected disabled>
-									Select an Option
-								</option>
-								{NUMBER_LIST.map((item, index) => {
-									return (
-										<option key={`${index}`} value={item}>
-											{item}
-										</option>
-									);
-								})}
-							</Form.Select>
-						</Form.Group>
+						{show && (
+							<Form.Group className='mt-3' as={Col} controlId='formGridEmail'>
+								<Form.Label className='fw-bolder'>
+									If Yes, in how many years?
+								</Form.Label>
+								<Form.Select aria-label='Default select example'>
+									<option selected disabled>
+										Select an Option
+									</option>
+									{NUMBER_LIST.map((item, index) => {
+										return (
+											<option key={`${index}`} value={item}>
+												{item}
+											</option>
+										);
+									})}
+								</Form.Select>
+							</Form.Group>
+						)}
 					</Form.Group>
 				</Row>
 				<Row className='mb-3'>
