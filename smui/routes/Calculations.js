@@ -2,23 +2,20 @@ const express = require("express");
 const router = express.Router();
 const Moment = require("moment");
 const formulajs = require("@formulajs/formulajs");
+var config = require('../db_connection/connection');
 
-var mysql = require('mysql');
 
-// Database Connection
 
-var con = mysql.createConnection({
-	host: "db-smarterpayouts-1-crm.cf53hayykhdp.us-east-2.rds.amazonaws.com",
-	port: 3306,
-	user: "crm_admin",
-	password: "Oscarfrancis12#$",
-	database: "smarterpayouts_crm"
-  });
-  
-  con.connect(function(err) {
-	if (err) throw err;
-	console.log("Connected!");
-  });
+
+var connection= config.connection
+connection.query ('select * from asthma', function(error, results){
+   if (results){
+     console.log(results);
+   }
+   else{
+     console.log(error);
+   }
+});
 
 
 router.post("/Calculate", async (req, res) => {
