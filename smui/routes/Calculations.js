@@ -4,18 +4,15 @@ const Moment = require("moment");
 const formulajs = require("@formulajs/formulajs");
 var config = require('../db_connection/connection');
 
-
-
-
 var connection= config.connection
-connection.query ('select * from asthma', function(error, results){
+/* connection.query ('select * from asthma', function(error, results){
    if (results){
      console.log(results);
    }
    else{
      console.log(error);
    }
-});
+}); */
 
 
 router.post("/Calculate", async (req, res) => {
