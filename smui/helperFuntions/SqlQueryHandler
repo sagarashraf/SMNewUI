@@ -1,0 +1,16 @@
+var config = require("../db_connection/connection");
+var connection = config.connection;
+
+module.exports = async function SqlQueryHandler(query) {
+	let fetchResult = new Promise((resolve, reject) => {
+		connection.query(query, (err, result) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(result);
+			}
+		});
+	});
+
+	return fetchResult;
+};
