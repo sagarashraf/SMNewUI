@@ -1,10 +1,11 @@
 const Dummydata = require("../Dummydata");
-const JsonConverter = require("../JsonConverter");
-const SqlQueryHandler = require("../SqlQueryHandler");
+const Angiography = require("./Angiography");
+const Anxiety = require("./Anxiety");
 const Asthma = require("./Asthma");
 const Bipolar = require("./Bipolar");
 const cancerState = require("./cancerState");
 const Cholesterol = require("./Cholesterol");
+const Heart = require("./Heart");
 const HyperTension = require("./HyperTension");
 const Kidney = require("./Kidney");
 const Liver = require("./Liver");
@@ -35,5 +36,8 @@ module.exports = async function MedicalHpUnhedge(sectionBaseWeightage) {
 		Dummydata.medicalData.psychiatric,
 		sex
 	);
-	return psychiatricDis;
+	const anxiety = await Anxiety(Dummydata.medicalData.anxiety, sex);
+	const heart = await Heart(Dummydata.medicalData.heartIssue, sex);
+	const angiography = await Angiography(Dummydata.medicalData.angiography, sex);
+	return angiography;
 };

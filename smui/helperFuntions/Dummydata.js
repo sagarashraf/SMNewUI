@@ -17,5 +17,6 @@ module.exports = Object.freeze({
 		psychiatric: { state: "yes", level: 5 },
 		heartIssue: { state: "yes", level: 5 },
 		angiography: { state: "yes", level: 5 },
+		anxiety: { state: "yes", level: 5 },
 	},
 });
