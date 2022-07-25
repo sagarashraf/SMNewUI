@@ -12,7 +12,7 @@ router.get("/b", async (req, res) => {
 	const result = await Section(21, sex);
 	const MedSection = await MedicalHpUnhedge(result);
 	console.log("main", MedSection);
-	res.status(200).send(result);
+	res.status(200).send(MedSection);
 });
 
 router.post("/Calculate", async (req, res) => {

@@ -11,18 +11,12 @@ module.exports = async function NeurologicalDis(object, sex) {
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
-			return {
-				neuro_disorderImpact: yesStateImpact[0].impact,
-				neuro_disorderLevel: yearLevelImpact[0].impact,
-			};
+			return [yesStateImpact[0].impact, yearLevelImpact[0].impact];
 		case "no":
 			noQuery = `select impact from neuro_disorder where gender= "${sex}" and option_ = "no"`;
 			let noStateimpact = await JsonConverter(await SqlQueryHandler(noQuery));
 
-			return {
-				neuro_disorderImpact: noStateimpact[0].impact,
-				neuro_disorderLevel: 0,
-			};
+			return [noStateimpact[0].impact, 0];
 		default:
 			break;
 	}

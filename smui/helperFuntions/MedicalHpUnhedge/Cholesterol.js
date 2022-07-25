@@ -12,8 +12,5 @@ module.exports = async function Cholesterol(object, sex) {
 		await SqlQueryHandler(cholesterolyears)
 	);
 
-	return {
-		cholesterol: cholesterolimpact[0].impact,
-		choYearsImpact: cholesterolyearsimpact[0].impact,
-	};
+	return [cholesterolimpact[0].impact, cholesterolyearsimpact[0].impact];
 };

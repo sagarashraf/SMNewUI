@@ -11,18 +11,12 @@ module.exports = async function Bipolar(object, sex) {
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
-			return {
-				bipolarImpact: yesStateImpact[0].impact,
-				bipolarLevel: yearLevelImpact[0].impact,
-			};
+			return [yesStateImpact[0].impact, yearLevelImpact[0].impact];
 		case "no":
 			noQuery = `select impact from bipolar where gender= "${sex}" and option_ = "no"`;
 			let noStateimpact = await JsonConverter(await SqlQueryHandler(noQuery));
 
-			return {
-				bipolarImpact: noStateimpact[0].impact,
-				bipolarLevel: 0,
-			};
+			return [noStateimpact[0].impact, 0];
 		default:
 			break;
 	}

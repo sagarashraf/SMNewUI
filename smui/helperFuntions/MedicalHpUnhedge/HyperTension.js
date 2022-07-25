@@ -13,8 +13,5 @@ module.exports = async function HyperTension(object, sex) {
 		await SqlQueryHandler(hypertensionyears)
 	);
 
-	return {
-		hypertension: hypertensionimpact[0].impact,
-		htYearsImpact: hypertensionyearsimpact[0].impact,
-	};
+	return [hypertensionimpact[0].impact, hypertensionyearsimpact[0].impact];
 };

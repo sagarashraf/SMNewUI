@@ -8,9 +8,11 @@ var connection = config.connection;
 module.exports = async function Section(age, sex) {
 	let parametervalue = await SqlQueryHandler(sqlQueries.PARAMETERS);
 	var parametersJson = await JsonConverter(parametervalue);
+	console.log("parameters Json", parametersJson);
 	ageQuery = `select impact from age_base where gender = "${sex}" and age = ${age}`;
 	let ageBase = await SqlQueryHandler(ageQuery);
 	var ageBaseJson = await JsonConverter(ageBase);
+	console.log("age base", ageBaseJson);
 	let initialBaseValue = parametersJson.map(function (element) {
 		return element.paramater_impact * ageBaseJson[0].impact;
 	});

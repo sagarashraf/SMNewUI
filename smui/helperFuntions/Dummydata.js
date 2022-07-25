@@ -1,14 +1,14 @@
 module.exports = Object.freeze({
 	medicalData: {
-		gender: "prefer not to answer",
+		gender: "female",
 		hiv: "yes",
-		checkUp: "yes",
+		checkUp: "no",
 		medHistory: "yes",
 		cancer: { state: "no", level: 5 },
 		hypertension: { state: "Medicated", level: 5 },
 		cholesterol: { state: "Medicated", level: 5 },
 		asthma: { state: "yes", level: 5 },
-		diabetes: { state: "yes", level: 1 },
+		diabetes: { state: "yes", level: "type-1" },
 		liver: { state: "yes", level: 5 },
 		kidney: { state: "yes", level: 5 },
 		apnea: { state: "yes", level: 5 },
