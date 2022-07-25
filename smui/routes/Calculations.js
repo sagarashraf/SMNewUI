@@ -5,14 +5,21 @@ const formulajs = require("@formulajs/formulajs");
 var config = require("../db_connection/connection");
 const Section = require("../helperFuntions/SectionWeightage");
 const MedicalHpUnhedge = require("../helperFuntions/MedicalHpUnhedge/MedicalHpUnhedge");
+const LifeStyleUnhedge = require("../helperFuntions/LifeStyleUnhedge/LifeStyleUnhedge");
+const LegalRiskUnhedge = require("../helperFuntions/LegalRisk/LegalRiskUnhedge");
 
 var connection = config.connection;
 router.get("/b", async (req, res) => {
 	let sex = "male";
 	const result = await Section(21, sex);
 	const MedSection = await MedicalHpUnhedge(result);
+	const lifestyleUnhedge = await LifeStyleUnhedge(result);
+	const legalRisk = await LegalRiskUnhedge(result);
+
 	console.log("main", MedSection);
-	res.status(200).send(MedSection);
+	console.log("lifestyle", lifestyleUnhedge);
+	console.log("legal", legalRisk);
+	res.status(200).send(legalRisk);
 });
 
 router.post("/Calculate", async (req, res) => {

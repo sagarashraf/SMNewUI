@@ -19,4 +19,24 @@ module.exports = Object.freeze({
 		angiography: { state: "yes", level: 5 },
 		anxiety: { state: "yes", level: 5 },
 	},
+	lifeStyle: {
+		gender: "female",
+		phyActive: "yes",
+		phyActivities: "once a week",
+		fruitVeg: "yes",
+		fruitvegportion: "no vegies",
+		disabilities: "yes",
+		tobacco: "no",
+		drugabuse: "no",
+		alchohol: "1-3 drinks daily",
+	},
+	legalRisk: {
+		infractions: 3,
+		gender: "female",
+		criminal: "yes",
+		duidwi: {
+			state: "yes",
+			level: 4,
+		},
+	},
 });
