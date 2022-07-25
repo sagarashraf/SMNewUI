@@ -17,7 +17,7 @@ module.exports = async function LegalRiskUnhedge(sectionBaseWeightage) {
 	);
 	const dwidui = await DuiDwi(Dummydata.legalRisk.duidwi, sex);
 
-	valueList.push(drivingInfractions, criminalCharges, criminalCharges, dwidui);
+	valueList.push(drivingInfractions, criminalCharges, dwidui);
 	console.log(valueList);
 	var ImpactValue = await [].concat.apply([], valueList);
 	MdInitialBaseValues = await ImpactValue.map(

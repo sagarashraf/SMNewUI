@@ -7,6 +7,9 @@ const Section = require("../helperFuntions/SectionWeightage");
 const MedicalHpUnhedge = require("../helperFuntions/MedicalHpUnhedge/MedicalHpUnhedge");
 const LifeStyleUnhedge = require("../helperFuntions/LifeStyleUnhedge/LifeStyleUnhedge");
 const LegalRiskUnhedge = require("../helperFuntions/LegalRisk/LegalRiskUnhedge");
+const FinancialRiskUnhedge = require("../helperFuntions/FinancialRisk/FinancialRiskUnhedge");
+const InsuranceRatingUnhedge = require("../helperFuntions/InsuranceRating/InsuranceRatingUnhedge");
+const TotalBaseRate = require("../helperFuntions/TotalBaseRate");
 
 var connection = config.connection;
 router.get("/b", async (req, res) => {
@@ -15,11 +18,22 @@ router.get("/b", async (req, res) => {
 	const MedSection = await MedicalHpUnhedge(result);
 	const lifestyleUnhedge = await LifeStyleUnhedge(result);
 	const legalRisk = await LegalRiskUnhedge(result);
-
-	console.log("main", MedSection);
+	const financialRiskUnhedge = await FinancialRiskUnhedge(result);
+	const insurancerating = await InsuranceRatingUnhedge(result);
+	const totalBase = await TotalBaseRate(
+		MedSection,
+		lifestyleUnhedge,
+		legalRisk,
+		financialRiskUnhedge,
+		insurancerating
+	);
+	console.log("Medical", MedSection);
 	console.log("lifestyle", lifestyleUnhedge);
 	console.log("legal", legalRisk);
-	res.status(200).send(legalRisk);
+	console.log("financial risk", financialRiskUnhedge);
+	console.log("Insurance rating ", insurancerating);
+	console.log("total Base ", totalBase);
+	res.status(200).send({ "total Base rate": totalBase });
 });
 
 router.post("/Calculate", async (req, res) => {

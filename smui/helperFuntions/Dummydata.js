@@ -39,4 +39,17 @@ module.exports = Object.freeze({
 			level: 4,
 		},
 	},
+	financialRisk: {
+		gender: "female",
+		bankcrupt: {
+			state: "yes",
+			level: 2,
+		},
+		creditrating: "Good 680-719",
+	},
+	insurance: {
+		gender: "female",
+		lifeCoverage: "yes",
+		decline: "yes",
+	},
 });
