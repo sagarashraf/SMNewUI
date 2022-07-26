@@ -52,4 +52,7 @@ module.exports = Object.freeze({
 		lifeCoverage: "yes",
 		decline: "yes",
 	},
+	personalInformation: {
+		insuranceCompany: "Others",
+	},
 });

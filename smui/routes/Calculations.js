@@ -10,6 +10,7 @@ const LegalRiskUnhedge = require("../controllers/LegalRiskUnhedge");
 const FinancialRiskUnhedge = require("../controllers/FinancialRiskUnhedge");
 const InsuranceRatingUnhedge = require("../controllers/InsuranceRatingUnhedge");
 const TotalBaseRate = require("../helperFuntions/TotalBaseRate");
+const GpCalculations = require("../controllers/GpCalculations");
 
 var connection = config.connection;
 router.get("/b", async (req, res) => {
@@ -33,7 +34,9 @@ router.get("/b", async (req, res) => {
 	console.log("financial risk", financialRiskUnhedge);
 	console.log("Insurance rating ", insurancerating);
 	console.log("total Base ", totalBase);
-	res.status(200).send({ "total Base rate": totalBase });
+	let gpCal = await GpCalculations();
+	console.log("insurance company ", gpCal);
+	res.status(200).send({ "total Base rate": gpCal });
 });
 
 router.post("/Calculate", async (req, res) => {
