@@ -1,6 +1,6 @@
 export const NUMBER_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 export const HEALTH_CONDITION = ["Normal", "Medicated", "High", "Not Sure"];
-export const YES_NO = ["NO", " YES"];
+export const YES_NO = ["No", "Yes"];
 export const EXERCISE = [
 	"No Exercise",
 	"One a Week",

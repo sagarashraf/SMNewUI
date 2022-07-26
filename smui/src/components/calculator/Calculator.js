@@ -5,12 +5,14 @@ import {
 	BANK_CUR,
 	CREDIT_CARD,
 	EXERCISE,
+	HEALTH_CONDITION,
 	INFRACTIONS,
 	MERRIAGE,
 	NUMBER_LIST,
 	VEG_FRUIT,
 	YES_NO,
 } from "../../utils/AppConstant";
+import { MakeLowerCase } from "../../utils/MakeLowerCase";
 
 /**
  * @author
@@ -18,15 +20,31 @@ import {
  **/
 
 export const Calculator = (props) => {
-	const [cancer, setCancer] = useState("");
-	const [show, setshow] = useState(false);
-	const [cancerlevel, setCancerlevel] = useState("");
-	const [bp, setBP] = useState("");
-	const [bplevel, setBPlevel] = useState("");
-	const [cholestoral, setCholestoral] = useState("");
-	const [cholestorallevel, setCholestorallevel] = useState("");
-	const [asthma, setAsthma] = useState("");
-	const [asthmalevel, setAsthmalevel] = useState("");
+	//-------- Cancer Hooks---------//
+	const [cancer, setCancer] = useState("No");
+	const [showCancer, setshowCancer] = useState(false);
+	const [cancerlevel, setCancerlevel] = useState(0);
+	//-------- Cancer Hooks---------//
+	//-------- Annual check-up---------//
+	const [anualcheckup, setAnnualCheckUp] = useState("Yes");
+	//-------- Annual check-up---------//
+	const [medicalHis, setMedicalHistory] = useState("Yes");
+	//---------Medical History---------//
+	//---------bp---------//
+	const [bp, setBP] = useState("No");
+	const [bplevel, setBPlevel] = useState(1);
+	const [showBP, setshowBP] = useState(false);
+	//---------bp---------//
+	//---------Cholesterol------//
+	const [cholestoral, setCholestoral] = useState("Normal");
+	const [cholestorallevel, setCholestorallevel] = useState(1);
+	const [showcholestorallevel, setShowCholestorallevel] = useState(false);
+	//---------Asthma------//
+	const [asthma, setAsthma] = useState("No");
+	const [asthmalevel, setAsthmalevel] = useState(1);
+	const [showasthmalevel, setShowAsthmalevel] = useState(false);
+	//---------Asthma------//
+
 	const [diabetes, setDiabetes] = useState("");
 	const [diabeteslevel, setDiabeteslevel] = useState("");
 	const [liver, setLiver] = useState("");
@@ -45,11 +63,59 @@ export const Calculator = (props) => {
 	const [anxietylevel, setAnxietylevel] = useState("");
 	const [heart, setHeart] = useState("");
 	const [heartlevel, setHeartlevel] = useState("");
-	console.log(cancer);
-	const test = (input) => {
-		setCancer(input);
-		setshow(!show);
+
+	const CancerHandler = (data) => {
+		var select = data.target.value;
+		if (select == "Yes") {
+			setCancer(select);
+			setshowCancer(true);
+		} else if (select == "No") {
+			setshowCancer(false);
+			setCancer(select);
+			setCancerlevel(0);
+		}
 	};
+	//=======bp========//
+	const BpHandler = (data) => {
+		var select = data.target.value;
+		if (select == "Yes") {
+			setBP(select);
+			setshowBP(true);
+		} else if (select == "No") {
+			setshowBP(false);
+			setBP(select);
+			setBPlevel(0);
+		}
+	};
+
+	////======chelestrol=====//
+	const CholestrolHander = (data) => {
+		var select = data.target.value;
+		console.log(select);
+		if (select == "Normal" || select == "Not Ssure") {
+			setCholestoral(select);
+			setCholestorallevel(0);
+			setShowCholestorallevel(false);
+		} else {
+			console.log("rty");
+			setCholestoral(select);
+			setShowCholestorallevel(true);
+		}
+	};
+
+	///===== asthma====///
+	const AsthmaHandler = (data) => {
+		var select = data.target.value;
+		if (select == "Yes") {
+			setAsthma(select);
+			setShowAsthmalevel(true);
+		} else if (select == "No") {
+			setShowAsthmalevel(false);
+			setAsthma(select);
+			setAsthmalevel(0);
+		}
+	};
+
 	return (
 		<Container className='mt-3'>
 			<Row>
@@ -262,11 +328,7 @@ export const Calculator = (props) => {
 						<Form.Label className='fw-bolder'>
 							Have you ever been diagnosed with Cancer?
 						</Form.Label>
-						<Form.Select
-							value={cancer}
-							onChange={(e) => test(e.target.value)}
-							name='cancer'
-							aria-label='Default select example'>
+						<Form.Select value={cancer} onChange={(e) => CancerHandler(e)}>
 							<option selected disabled>
 								Select an Option
 							</option>
@@ -278,12 +340,15 @@ export const Calculator = (props) => {
 								);
 							})}
 						</Form.Select>
-						{show && (
+						{showCancer && (
 							<Form.Group className='mt-3' as={Col} controlId='formGridEmail'>
 								<Form.Label className='fw-bolder'>
 									If Yes, in how many years?
 								</Form.Label>
-								<Form.Select aria-label='Default select example'>
+								<Form.Select
+									value={cancerlevel}
+									onChange={(e) => setCancerlevel(e.target.value)}
+									aria-label='Default select example'>
 									<option selected disabled>
 										Select an Option
 									</option>
@@ -304,13 +369,16 @@ export const Calculator = (props) => {
 						<Form.Label className='fw-bolder'>
 							Do you seek medical check-up annually?
 						</Form.Label>
-						<Form.Select aria-label='Default select example'>
+						<Form.Select
+							value={anualcheckup}
+							onChange={(e) => setAnnualCheckUp(e.target.value)}
+							aria-label='Default select example'>
 							<option selected disabled>
 								Select an Option
 							</option>
-							{NUMBER_LIST.map((item, index) => {
+							{YES_NO.map((item, index) => {
 								return (
-									<option key={`${index}`} value={item}>
+									<option key={`${index}checkup`} value={item}>
 										{item}
 									</option>
 								);
@@ -322,7 +390,10 @@ export const Calculator = (props) => {
 						<Form.Label className='fw-bolder'>
 							Any major medical history?
 						</Form.Label>
-						<Form.Select aria-label='Default select example'>
+						<Form.Select
+							value={medicalHis}
+							onChange={(e) => setMedicalHistory(e.target.value)}
+							aria-label='Default select example'>
 							<option selected disabled>
 								Select an Option
 							</option>
@@ -341,7 +412,10 @@ export const Calculator = (props) => {
 						<Form.Label className='fw-bolder'>
 							Any history of high blood pressure or hypertension issue?
 						</Form.Label>
-						<Form.Select aria-label='Default select example'>
+						<Form.Select
+							value={bp}
+							onChange={(e) => BpHandler(e)}
+							aria-label='Default select example'>
 							<option selected disabled>
 								Select an Option
 							</option>
@@ -353,55 +427,71 @@ export const Calculator = (props) => {
 								);
 							})}
 						</Form.Select>
-						<Form.Group as={Col} controlId='formGridEmail'>
-							<Form.Label className='fw-bolder'>
-								If Yes, in how many years?
-							</Form.Label>
-							<Form.Select aria-label='Default select example'>
-								<option selected disabled>
-									Select an Option
-								</option>
-								{NUMBER_LIST.map((item, index) => {
-									return (
-										<option key={`${index}`} value={item}>
-											{item}
-										</option>
-									);
-								})}
-							</Form.Select>
-						</Form.Group>
+						{showBP && (
+							<Form.Group as={Col} controlId='formGridEmail'>
+								<Form.Label className='fw-bolder'>
+									If Yes, in how many years?
+								</Form.Label>
+								<Form.Select
+									value={bplevel}
+									onChange={(e) => setBPlevel(e.target.value)}
+									aria-label='Default select example'>
+									<option selected disabled>
+										Select an Option
+									</option>
+									{NUMBER_LIST.map((item, index) => {
+										return (
+											<option key={`${index}`} value={item}>
+												{item}
+											</option>
+										);
+									})}
+								</Form.Select>
+							</Form.Group>
+						)}
 					</Form.Group>
 
 					<Form.Group as={Col} sm={6} xs={12} controlId='formGridPassword'>
 						<Form.Label className='fw-bolder'>
 							Any history of High Cholesterol?
 						</Form.Label>
-						<Form.Select aria-label='Default select example'>
+						<Form.Select
+							value={cholestoral}
+							onChange={(e) => CholestrolHander(e)}
+							aria-label='Default select example'>
 							<option selected disabled>
 								Open this select menu
 							</option>
-							<option value='1'>Normal</option>
-							<option value='2'>Medcated</option>
-							<option value='1'>High</option>
-							<option value='2'>Not sure</option>
+							{HEALTH_CONDITION.map((item, index) => {
+								return (
+									<option key={`${index}`} value={item}>
+										{item}
+									</option>
+								);
+							})}
 						</Form.Select>
-						<Form.Group as={Col} controlId='formGridEmail'>
-							<Form.Label className='fw-bolder'>
-								If Yes, in how many years?
-							</Form.Label>
-							<Form.Select aria-label='Default select example'>
-								<option selected disabled>
-									Select an Option
-								</option>
-								{NUMBER_LIST.map((item, index) => {
-									return (
-										<option key={`${index}`} value={item}>
-											{item}
-										</option>
-									);
-								})}
-							</Form.Select>
-						</Form.Group>
+						{showcholestorallevel && (
+							<Form.Group as={Col} controlId='formGridEmail'>
+								<Form.Label className='fw-bolder'>
+									If Yes, in how many years?
+								</Form.Label>
+								<Form.Select
+									value={cholestorallevel}
+									onChange={(e) => setCholestorallevel(e.target.value)}
+									aria-label='Default select example'>
+									<option selected disabled>
+										Select an Option
+									</option>
+									{NUMBER_LIST.map((item, index) => {
+										return (
+											<option key={`${index}`} value={item}>
+												{item}
+											</option>
+										);
+									})}
+								</Form.Select>
+							</Form.Group>
+						)}
 					</Form.Group>
 				</Row>
 				<Row className='mb-3'>
@@ -409,7 +499,10 @@ export const Calculator = (props) => {
 						<Form.Label className='fw-bolder'>
 							Any history of Asthma?
 						</Form.Label>
-						<Form.Select aria-label='Default select example'>
+						<Form.Select
+							value={asthma}
+							onChange={(e) => AsthmaHandler(e)}
+							aria-label='Default select example'>
 							<option selected disabled>
 								Select an Option
 							</option>
@@ -421,23 +514,28 @@ export const Calculator = (props) => {
 								);
 							})}
 						</Form.Select>
-						<Form.Group as={Col} controlId='formGridEmail'>
-							<Form.Label className='fw-bolder'>
-								If Yes, in how many years?
-							</Form.Label>
-							<Form.Select aria-label='Default select example'>
-								<option selected disabled>
-									Select an Option
-								</option>
-								{NUMBER_LIST.map((item, index) => {
-									return (
-										<option key={`${index}`} value={item}>
-											{item}
-										</option>
-									);
-								})}
-							</Form.Select>
-						</Form.Group>
+						{showasthmalevel && (
+							<Form.Group as={Col} controlId='formGridEmail'>
+								<Form.Label className='fw-bolder'>
+									If Yes, in how many years?
+								</Form.Label>
+								<Form.Select
+									value={asthmalevel}
+									onChange={(e) => setAsthmalevel(e.target.value)}
+									aria-label='Default select example'>
+									<option selected disabled>
+										Select an Option
+									</option>
+									{NUMBER_LIST.map((item, index) => {
+										return (
+											<option key={`${index}`} value={item}>
+												{item}
+											</option>
+										);
+									})}
+								</Form.Select>
+							</Form.Group>
+						)}
 					</Form.Group>
 
 					<Form.Group as={Col} sm={6} xs={12} controlId='formGridPassword'>
