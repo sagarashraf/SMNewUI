@@ -1,7 +1,7 @@
-const Dummydata = require("../Dummydata");
-const CriminalCharges = require("./CriminalCharges");
-const DrivingInfractions = require("./DrivingInfractions");
-const DuiDwi = require("./DuiDwi");
+const Dummydata = require("../helperFuntions/Dummydata");
+const CriminalCharges = require("../helperFuntions/LegalRisk/CriminalCharges");
+const DrivingInfractions = require("../helperFuntions/LegalRisk/DrivingInfractions");
+const DuiDwi = require("../helperFuntions/LegalRisk/DuiDwi");
 
 module.exports = async function LegalRiskUnhedge(sectionBaseWeightage) {
 	var valueList = [];

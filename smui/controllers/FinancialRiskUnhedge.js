@@ -1,6 +1,6 @@
-const Dummydata = require("../Dummydata");
-const Bankcrupt = require("./Bankcrupt");
-const CreditRating = require("./CreditRating");
+const Dummydata = require("../helperFuntions/Dummydata");
+const Bankcrupt = require("../helperFuntions/FinancialRisk/Bankcrupt");
+const CreditRating = require("../helperFuntions/FinancialRisk/CreditRating");
 
 module.exports = async function FinancialRiskUnhedge(sectionBaseWeightage) {
 	var valueList = [];

@@ -4,11 +4,11 @@ const Moment = require("moment");
 const formulajs = require("@formulajs/formulajs");
 var config = require("../db_connection/connection");
 const Section = require("../helperFuntions/SectionWeightage");
-const MedicalHpUnhedge = require("../helperFuntions/MedicalHpUnhedge/MedicalHpUnhedge");
-const LifeStyleUnhedge = require("../helperFuntions/LifeStyleUnhedge/LifeStyleUnhedge");
-const LegalRiskUnhedge = require("../helperFuntions/LegalRisk/LegalRiskUnhedge");
-const FinancialRiskUnhedge = require("../helperFuntions/FinancialRisk/FinancialRiskUnhedge");
-const InsuranceRatingUnhedge = require("../helperFuntions/InsuranceRating/InsuranceRatingUnhedge");
+const MedicalHpUnhedge = require("../controllers/MedicalHpUnhedge");
+const LifeStyleUnhedge = require("../controllers/LifeStyleUnhedge");
+const LegalRiskUnhedge = require("../controllers/LegalRiskUnhedge");
+const FinancialRiskUnhedge = require("../controllers/FinancialRiskUnhedge");
+const InsuranceRatingUnhedge = require("../controllers/InsuranceRatingUnhedge");
 const TotalBaseRate = require("../helperFuntions/TotalBaseRate");
 
 var connection = config.connection;

@@ -1,12 +1,12 @@
-const Dummydata = require("../Dummydata");
-const Alchohol = require("./Alchohol");
-const DrugAbuse = require("./DrugAbuse");
-const FruitVeg = require("./FruitVeg");
-const FruitVegPattern = require("./FruitVegPattern");
-const PhysicalActivities = require("./PhysicalActivities");
-const PhysicalDisability = require("./PhysicalDisability");
-const PhysicallyActive = require("./PhysicallyActive");
-const Tobacco = require("./Tobacco");
+const Dummydata = require("../helperFuntions/Dummydata");
+const Alchohol = require("../helperFuntions/LifeStyleUnhedge/Alchohol");
+const DrugAbuse = require("../helperFuntions/LifeStyleUnhedge/DrugAbuse");
+const FruitVeg = require("../helperFuntions/LifeStyleUnhedge/FruitVeg");
+const FruitVegPattern = require("../helperFuntions/LifeStyleUnhedge/FruitVegPattern");
+const PhysicalActivities = require("../helperFuntions/LifeStyleUnhedge/PhysicalActivities");
+const PhysicalDisability = require("../helperFuntions/LifeStyleUnhedge/PhysicalDisability");
+const PhysicallyActive = require("../helperFuntions/LifeStyleUnhedge/PhysicallyActive");
+const Tobacco = require("../helperFuntions/LifeStyleUnhedge/Tobacco");
 
 module.exports = async function LifeStyleUnhedge(sectionBaseWeightage) {
 	var valueList = [];

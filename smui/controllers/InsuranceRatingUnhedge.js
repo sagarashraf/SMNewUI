@@ -1,6 +1,6 @@
-const Dummydata = require("../Dummydata");
-const CreditDecline = require("./CreditDecline");
-const CurrentLifeIns = require("./CurrentLifeIns");
+const Dummydata = require("../helperFuntions/Dummydata");
+const CreditDecline = require("../helperFuntions/InsuranceRating/CreditDecline");
+const CurrentLifeIns = require("../helperFuntions/InsuranceRating/CurrentLifeIns");
 module.exports = async function InsuranceRatingUnhedge(sectionBaseWeightage) {
 	var valueList = [];
 	let sex = Dummydata.insurance.gender;
