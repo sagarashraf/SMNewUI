@@ -190,6 +190,7 @@ router.post("/Calculate", async (req, res) => {
 
 
 	// Percent Step GP
+	f
 
 	//GP KI PERCENT STEP GAME
 	if (data.PercentStep > 0 && productType == "GP") {
@@ -784,14 +785,10 @@ router.post("/Calculate", async (req, res) => {
 				sendPayload.message = "Success";
 				html_output = "<p><strong>Min Offer:</strong> "+pssum+"</p><p><strong>Max Offer</strong>: "+pssumc+"</p><p><strong>Family Protection</strong>: "+Math.ceil(bensum/5000)*5000+"</p>"
 				sendPayload.html_ = html_output
-		} catch (err) {
-			error = {
-				status: 500,
-				error: "An error occurred. Please try again later.",
-			};
-			return res.send(error);
-		}
+		} 
 	}
+
+
 
 });
 
