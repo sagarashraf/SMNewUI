@@ -3,7 +3,7 @@ const router = express.Router();
 const InsuranceRating = require("../controllers/InsuranceCompany");
 
 router.get("/ins_company_names", async (req, res) => {
-    let ir = await InsuranceRating('Others');
+    let ir = await InsuranceRating();
     console.log(ir);
     res.status(200).send({ "insurance_company_name": ir });
 
