@@ -18,6 +18,9 @@ connection.on("connected", () => {
 const CalculationRoutes = require("./routes/Calculations");
 app.use("/a", CalculationRoutes);
 
+const InsuranceTermRoute = require("./routes/insurance_rating");
+app.use("/bc",InsuranceTermRoute);
+
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}!`);
 });
