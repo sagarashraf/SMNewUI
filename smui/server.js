@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 var config = require("../smui/db_connection/connection.js");
-const port = 3000;
+const port = 5000;
 app.use(express.json());
 app.use(cors());
 
