@@ -17,40 +17,29 @@ const NeurologicalDis = require("../helperFuntions/MedicalHpUnhedge/Neurological
 const PsychiatricDis = require("../helperFuntions/MedicalHpUnhedge/PsychiatricDis");
 const SleepApnea = require("../helperFuntions/MedicalHpUnhedge/SleepApnea");
 
-module.exports = async function MedicalHpUnhedge(sectionBaseWeightage) {
+module.exports = async function MedicalHpUnhedge(
+	sectionBaseWeightage,
+	data,
+	sex
+) {
 	var valueList = [];
-
-	let dummydata = Dummydata.medicalData;
-	let sex = dummydata.gender;
-	const cancerResults = await cancerState(Dummydata.medicalData.cancer, sex);
-	const hypertension = await HyperTension(
-		Dummydata.medicalData.hypertension,
-		sex
-	);
-	const asthma = await Asthma(Dummydata.medicalData.asthma, sex);
-	const cholesterol = await Cholesterol(Dummydata.medicalData.cholesterol, sex);
-	const liver = await Liver(Dummydata.medicalData.liver, sex);
-	const kidney = await Kidney(Dummydata.medicalData.kidney, sex);
-	const sleepApnea = await SleepApnea(Dummydata.medicalData.apnea, sex);
-	const bipolar = await Bipolar(Dummydata.medicalData.bipolar, sex);
-	const neurologicalDis = await NeurologicalDis(
-		Dummydata.medicalData.neuroDisorder,
-		sex
-	);
-	const psychiatricDis = await PsychiatricDis(
-		Dummydata.medicalData.psychiatric,
-		sex
-	);
-	const anxiety = await Anxiety(Dummydata.medicalData.anxiety, sex);
-	const heart = await Heart(Dummydata.medicalData.heartIssue, sex);
-	const angiography = await Angiography(Dummydata.medicalData.angiography, sex);
-	const diabetes = await Diabetes(Dummydata.medicalData.diabetes, sex);
-	const hiv = await Hiv(Dummydata.medicalData.hiv, sex);
-	const annualCheckup = await AnnualCheckUp(Dummydata.medicalData.checkUp, sex);
-	const medicalHis = await MedIcalHistory(
-		Dummydata.medicalData.medHistory,
-		sex
-	);
+	const cancerResults = await cancerState(data.cancer, sex);
+	const hypertension = await HyperTension(data.hypertension, sex);
+	const asthma = await Asthma(data.asthma, sex);
+	const cholesterol = await Cholesterol(data.cholesterol, sex);
+	const liver = await Liver(data.liver, sex);
+	const kidney = await Kidney(data.kidney, sex);
+	const sleepApnea = await SleepApnea(data.apnea, sex);
+	const bipolar = await Bipolar(data.bipolar, sex);
+	const neurologicalDis = await NeurologicalDis(data.neuroDisorder, sex);
+	const psychiatricDis = await PsychiatricDis(data.psychiatric, sex);
+	const anxiety = await Anxiety(data.anxiety, sex);
+	const heart = await Heart(data.heartIssue, sex);
+	const angiography = await Angiography(data.angiography, sex);
+	const diabetes = await Diabetes(data.diabetes, sex);
+	const hiv = await Hiv(data.hiv, sex);
+	const annualCheckup = await AnnualCheckUp(data.checkUp, sex);
+	const medicalHis = await MedIcalHistory(data.medHistory, sex);
 	valueList.push(
 		cancerResults,
 		hypertension,

@@ -15,13 +15,26 @@ const GpCalculations = require("../controllers/GpCalculations");
 var connection = config.connection;
 router.post("/calculations", async (req, res) => {
 	console.log("ddfsd", req.body);
-	let sex = "male";
-	const result = await Section(21, sex);
-	const MedSection = await MedicalHpUnhedge(result);
-	const lifestyleUnhedge = await LifeStyleUnhedge(result);
-	const legalRisk = await LegalRiskUnhedge(result);
-	const financialRiskUnhedge = await FinancialRiskUnhedge(result);
-	const insurancerating = await InsuranceRatingUnhedge(result);
+	let sex = req.body.gender;
+	let age = req.body.age;
+	const result = await Section(age, sex);
+	const MedSection = await MedicalHpUnhedge(result, req.body.medicalData, sex);
+	const lifestyleUnhedge = await LifeStyleUnhedge(
+		result,
+		req.body.lifeStyle,
+		sex
+	);
+	const legalRisk = await LegalRiskUnhedge(result, req.body.legalRisk, sex);
+	const financialRiskUnhedge = await FinancialRiskUnhedge(
+		result,
+		req.body.financialRisk,
+		sex
+	);
+	const insurancerating = await InsuranceRatingUnhedge(
+		result,
+		req.body.insurance,
+		sex
+	);
 	const totalBase = await TotalBaseRate(
 		MedSection,
 		lifestyleUnhedge,
