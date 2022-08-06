@@ -86,6 +86,9 @@ LCP_Min_Max_Quotes_AI(pmntstartdate,pmntEndDate_unhedge,pmntMode,pmntAmount,tota
 // For GP Without Percent Step
 GP_Min_Max_Quotes(pmntstartdate,pmntEndDate,pmntMode,pmntAmount,crc,cr)
 
+// For GP With Percent Step
+GP_Min_Max_Quotes_AI(pmntstartdate,pmntEndDate,pmntMode,pmntAmount,crc,cr,percentStep)
+
 
 
 });
@@ -349,6 +352,7 @@ function LCP_Min_Max_Quotes_AI(pmntStartDate,pmntEndDate,pmntMode,pmntAmount,bas
 
 			var benff = pssum / (1 + ann_interest_rate) ** kk;
 			var benfc = pssumc / (1 + ann_interest_rate_c) ** kk;
+
 		}
 
 }
