@@ -23,6 +23,9 @@ import {
 import { MakeLowerCase } from "../../utils/MakeLowerCase";
 import { AgeFromDateString, AgeFromDate } from "age-calculator";
 import { CALCULATION_OBJECT } from "../../utils/CalculationObjectTemplate";
+import { BMI } from "../../utils/BMI";
+import { UnhedgeEndDate } from "../../utils/UnhedgeEndDate";
+import { HedgeEndDate } from "../../utils/HedgeEndDate";
 
 /**
  * @author
@@ -47,7 +50,7 @@ export const Calculator = (props) => {
 	const [height, setHeight] = useState(5.7);
 
 	const [Weight, setWeight] = useState(70);
-	const [showLBSWeight, setshowLBSWeight] = useState(false);
+	const [disableWeight, setdisableWeight] = useState(true);
 	const [WeightBMI, setWeightBMI] = useState("");
 	const [insuranceCompany, setInsuranceCompany] = useState("");
 	const [insuranceCompanyRating, setInsuranceCompanyRating] = useState("");
@@ -186,24 +189,28 @@ export const Calculator = (props) => {
 
 	///======== Birthdate =====////
 
-	const BirthdateHandler = (e) => {
+	const BirthdateHandler = async (e) => {
 		console.log(e.target.value);
 		let ageFromString = new AgeFromDateString(e.target.value).age;
 		setBirthDate(e.target.value);
 		setAge(ageFromString);
+		console.log("=========", await UnhedgeEndDate(ageFromString));
+		console.log("===+++====", await HedgeEndDate(30));
 	};
 
 	///======= BMI setshow
-	const WeightBMIHandler = (d) => {
-		if (d == "Prefer To Put Manually") {
-			setshowLBSWeight(true);
-			setWeightBMI(d);
-			setWeight(75);
-		} else {
-			setWeightBMI(d);
-			setshowLBSWeight(false);
-			setWeight(0);
-		}
+	const HandleHeight = async (d) => {
+		setdisableWeight(false);
+		await setHeight(d);
+		let BMIType = await BMI(gender, d, Weight);
+		setWeightBMI(BMIType);
+		console.log("retunr", BMIType);
+	};
+	const HandleWeight = async (d) => {
+		await setWeight(d);
+		let BMIType = await BMI(gender, height, d);
+		setWeightBMI(BMIType);
+		console.log("retunr", BMIType);
 	};
 
 	//===== InsuranceHandler
@@ -718,11 +725,11 @@ export const Calculator = (props) => {
 					</Form.Group>
 				</Row>
 				<Row className='mb-3'>
-					<Form.Group as={Col} sm={6} xs={12} controlId='formGridEmail'>
+					<Form.Group as={Col} sm={4} xs={12} controlId='formGridEmail'>
 						<Form.Label className='fw-bolder'>Height</Form.Label>
 						<Form.Select
 							value={height}
-							onChange={(e) => setHeight(e.target.value)}
+							onChange={(e) => HandleHeight(e.target.value)}
 							aria-label='Default select example'>
 							{HEIGHT_LIST.map((item, index) => {
 								return (
@@ -733,39 +740,33 @@ export const Calculator = (props) => {
 							})}
 						</Form.Select>
 					</Form.Group>
-					{showLBSWeight ? (
-						<Form.Group as={Col} sm={6} xs={12} controlId='formGridPassword'>
-							<Form.Label className='fw-bolder'>Weight (LBS)</Form.Label>
-							<Form.Select
-								value={Weight}
-								onChange={(e) => setWeight(e.target.value)}
-								aria-label='Default select example'>
-								{WEIGHT_LIST.map((item, index) => {
-									return (
-										<option key={`${index}Height`} value={item}>
-											{item}
-										</option>
-									);
-								})}
-							</Form.Select>
-						</Form.Group>
-					) : (
-						<Form.Group as={Col} sm={6} xs={12} controlId='formGridEmail'>
-							<Form.Label className='fw-bolder'>Weight (BMI)</Form.Label>
-							<Form.Select
-								value={WeightBMI}
-								onChange={(e) => WeightBMIHandler(e.target.value)}
-								aria-label='Default select example'>
-								{BMI_WEIGHT.map((item, index) => {
-									return (
-										<option key={`${index}Height`} value={item}>
-											{item}
-										</option>
-									);
-								})}
-							</Form.Select>
-						</Form.Group>
-					)}
+
+					<Form.Group as={Col} sm={4} xs={12} controlId='formGridPassword'>
+						<Form.Label className='fw-bolder'>Weight (LBS)</Form.Label>
+						<Form.Select
+							disabled={disableWeight}
+							value={Weight}
+							onChange={(e) => HandleWeight(e.target.value)}
+							aria-label='Default select example'>
+							{WEIGHT_LIST.map((item, index) => {
+								return (
+									<option key={`${index}Height`} value={item}>
+										{item}
+									</option>
+								);
+							})}
+						</Form.Select>
+					</Form.Group>
+
+					<Form.Group as={Col} sm={4} xs={12} controlId='formGridEmail'>
+						<Form.Label className='fw-bolder'>Weight (BMI)</Form.Label>
+						<Form.Control
+							readOnly
+							value={WeightBMI}
+							type='text'
+							placeholder='Ideal Weight /Average Weight'
+						/>
+					</Form.Group>
 				</Row>
 				<Row className='mb-3'>
 					<Form.Group as={Col} sm={6} xs={12} controlId='formGridPassword'>

@@ -1,8 +1,13 @@
 export const BMI = (gen, height, MenuallWeight) => {
-	let bmi =
-		parseFloat(MenuallWeight) / (parseFloat(height) * parseFloat(height));
+	console.log("==", gen, height, MenuallWeight);
+	let decimalpart = (height % 1).toFixed(1);
+	let heightInInches = Math.trunc(height) * 12 + decimalpart * 10;
+	console.log("===?", heightInInches);
+	let Dem = parseFloat(heightInInches) * parseFloat(heightInInches);
+	let bmi = parseFloat(MenuallWeight * 703) / Dem;
+	console.log("BMI POINTS", bmi);
 	let weight;
-	if (gen == "M") {
+	if (gen == "Male") {
 		if (bmi <= 17.5) {
 			weight = "Underweight";
 		} else if (bmi > 17.5 && bmi <= 21.0) {
@@ -15,7 +20,7 @@ export const BMI = (gen, height, MenuallWeight) => {
 			weight = "Obese";
 		}
 		return weight;
-	} else if (gen == "F") {
+	} else if (gen == "Female") {
 		if (bmi <= 16.6) {
 			weight = "Underweight";
 		} else if (bmi > 16.6 && bmi <= 19.9) {
