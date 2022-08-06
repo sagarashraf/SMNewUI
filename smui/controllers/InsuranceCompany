@@ -3,10 +3,10 @@ const SqlQueryHandler = require("../helperFuntions/SqlQueryHandler");
 
 
 module.exports = async function InsuranceRating(company) {
-	query = `select company_name, rating from insurance_rating where company_name = "${company}";`;
+	query = `select company_name, rating from insurance_rating;`;
     console.log(query);
-	let is_rating = await JsonConverter(await SqlQueryHandler(query)); 
-	console.log(is_rating);
-	return is_rating;
+	let company_names = await JsonConverter(await SqlQueryHandler(query)); 
+	console.log(company_names);
+	return company_names;
 };
 

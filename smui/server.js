@@ -21,8 +21,8 @@ app.use("/a", CalculationRoutes);
 const InsuranceTermRoute = require("./routes/insurance_rating");
 app.use("/bc",InsuranceTermRoute);
 
-const InsuranceRatingRoute = require("./routes/insurance_company");
-app.use("/bd",InsuranceRatingRoute);
+const InsuranceCompanyRoute = require("./routes/insurance_company");
+app.use("/bd",InsuranceCompanyRoute);
 
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}!`);
