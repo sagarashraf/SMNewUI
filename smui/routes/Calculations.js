@@ -13,7 +13,8 @@ const TotalBaseRate = require("../helperFuntions/TotalBaseRate");
 const GpCalculations = require("../controllers/GpCalculations");
 
 var connection = config.connection;
-router.get("/b", async (req, res) => {
+router.post("/calculations", async (req, res) => {
+	console.log("ddfsd", req.body);
 	let sex = "male";
 	const result = await Section(21, sex);
 	const MedSection = await MedicalHpUnhedge(result);
@@ -40,7 +41,6 @@ router.get("/b", async (req, res) => {
 });
 
 router.post("/Calculate", async (req, res) => {
-	
 	// GP Calculation without percentage
 
 	let percentStep = 0;
@@ -188,9 +188,8 @@ router.post("/Calculate", async (req, res) => {
 		}
 	}
 
-
 	// Percent Step GP
-	f
+	f;
 
 	//GP KI PERCENT STEP GAME
 	if (data.PercentStep > 0 && productType == "GP") {
@@ -525,271 +524,273 @@ router.post("/Calculate", async (req, res) => {
 		}
 	}
 
-
 	// LCP Calculation With Percent Step and Unhedge
 
 	if (data.PercentStep > 0 && productType == "LCP") {
 		// Calculation of Life Span is here
 
-			var no_of_days = 365 * is;
-			const diffTime = Math.abs(curr_date - old_date);
-			const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-			var total = diffDays + cuttoff + no_of_days;
-			pmntEndDate = new Date(
-				old_date.getTime() + parseInt(total) * 24 * 60 * 60 * 1000
-			);
-			
+		var no_of_days = 365 * is;
+		const diffTime = Math.abs(curr_date - old_date);
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+		var total = diffDays + cuttoff + no_of_days;
+		pmntEndDate = new Date(
+			old_date.getTime() + parseInt(total) * 24 * 60 * 60 * 1000
+		);
+
 		//Calculation Starts Here
-			var sum = 0.0; //Minimum Discount Rate
-			var sumc = 0.0; //Maximum Discount Rate
-			var m = 0.0;
+		var sum = 0.0; //Minimum Discount Rate
+		var sumc = 0.0; //Maximum Discount Rate
+		var m = 0.0;
 
+		var payments = data.PaymentAmount;
+		var freq = 0;
+		if (data.PaymentMode == "Weekly") {
+			var diff = (pmntEndDate.getTime() - pmntStartDate.getTime()) / 1000;
+			diff /= 60 * 60 * 24 * 7;
+			freq = Math.abs(Math.round(diff));
+			m = 52.0;
+		}
+		if (data.PaymentMode == "Monthly") {
+			freq =
+				pmntEndDate.getMonth() -
+				pmntStartDate.getMonth() +
+				12 * (pmntEndDate.getFullYear() - pmntStartDate.getFullYear());
+			m = 12.0;
+		}
+		if (data.PaymentMode == "Quarterly") {
+			var beginDate = Moment(data.PaymentStartDate);
+			var endDate = Moment(pmntEndDate);
+			freq = Math.floor(endDate.diff(beginDate, "months") / 3);
+			m = 4.0;
+		}
+		if (data.PaymentMode == "Semiannually") {
+			x = pmntEndDate.getFullYear() - pmntStartDate.getFullYear();
+			freq = x * 2;
+			m = 2.0;
+		}
+		if (data.PaymentMode == "Annually") {
+			freq = pmntEndDate.getFullYear() - pmntStartDate.getFullYear();
+			m = 1.0;
+		}
 
-			var payments = data.PaymentAmount;
-			var freq = 0;
-			if (data.PaymentMode == "Weekly") {
-				var diff = (pmntEndDate.getTime() - pmntStartDate.getTime()) / 1000;
-				diff /= 60 * 60 * 24 * 7;
-				freq = Math.abs(Math.round(diff));
-				m = 52.0;
-			}
-			if (data.PaymentMode == "Monthly") {
-				freq =
-					pmntEndDate.getMonth() -
-					pmntStartDate.getMonth() +
-					12 * (pmntEndDate.getFullYear() - pmntStartDate.getFullYear());
-				m = 12.0;
-			}
-			if (data.PaymentMode == "Quarterly") {
-				var beginDate = Moment(data.PaymentStartDate);
-				var endDate = Moment(pmntEndDate);
-				freq = Math.floor(endDate.diff(beginDate, "months") / 3);
-				m = 4.0;
-			}
-			if (data.PaymentMode == "Semiannually") {
-				x = pmntEndDate.getFullYear() - pmntStartDate.getFullYear();
-				freq = x * 2;
-				m = 2.0;
-			}
-			if (data.PaymentMode == "Annually") {
-				freq = pmntEndDate.getFullYear() - pmntStartDate.getFullYear();
-				m = 1.0;
-			}
+		// Calculation of end date
 
-			// Calculation of end date
+		var ins_terms_c = conn.db.collection("insurance_term");
+		const query_ins = { age: data.Age, gender: gen };
+		var cursor_ins = await ins_terms_c.findOne(query_ins);
+		var ins_terms = cursor_ins.insurance_term;
+		var no_of_days = ins_terms * 365;
+		var calc_end = no_of_days + ins_terms + pmntStartDate;
+		var r = sum / m;
+		var rc = sumc / m;
+		var pvaf = [];
+		var pvac = [];
+		var pvab = [];
+		var diff_in_years = pmntEndDate.getFullYear() - pmntStartDate.getFullYear();
+		//Calculate the percent.
+		var percent_step = (data.PercentStep / 100) * payments;
+		//console.log("percent step",percent_step);
+		//console.log("difference in years",diff_in_years);
+		var ann_interest_rate = (1 + sum / m) ** m - 1;
+		var ann_interest_rate_c = (1 + sumc / m) ** m - 1;
+		var ann_interest_rate_b = (1 + 0.054 / m) ** m - 1;
 
-			var ins_terms_c = conn.db.collection("insurance_term");
-			const query_ins = { age: data.Age, gender: gen };
-			var cursor_ins = await ins_terms_c.findOne(query_ins);
-			var ins_terms = cursor_ins.insurance_term;
-			var no_of_days = ins_terms * 365;
-			var calc_end = no_of_days + ins_terms + pmntStartDate;
-			var r = sum / m;
-			var rc = sumc / m;
-			var pvaf = [];
-			var pvac = [];
-			var pvab = [];
-			var diff_in_years =
-				pmntEndDate.getFullYear() - pmntStartDate.getFullYear();
-			//Calculate the percent.
-			var percent_step = (data.PercentStep / 100) * payments;
-			//console.log("percent step",percent_step);
-			//console.log("difference in years",diff_in_years);
-			var ann_interest_rate = (1 + sum / m) ** m - 1;
-			var ann_interest_rate_c = (1 + sumc / m) ** m - 1;
-			var ann_interest_rate_b = (1 + 0.054 / m) ** m - 1;
+		var rpr = ann_interest_rate / m;
+		var rprc = ann_interest_rate_c / m;
+		var rprb = ann_interest_rate_b / m;
 
-			var rpr = ann_interest_rate / m;
-			var rprc = ann_interest_rate_c / m;
-			var rprb = ann_interest_rate_b / m;
+		var j = 0;
+		var h = 0;
+		var pvaff = [];
+		var pvafc = [];
+		var pvabb = [];
+		var nums = [];
+		var nm = 0;
 
-			var j = 0;
-			var h = 0;
-			var pvaff = [];
-			var pvafc = [];
-			var pvabb = [];
-			var nums = [];
-			var nm = 0;
-
-			if (data.PaymentMode == "Annually") {
+		if (data.PaymentMode == "Annually") {
+			pvaf.push(payments);
+			pvac.push(payments);
+			pvab.push(payments);
+			for (j = 1; j < diff_in_years; j++) {
+				percent_step = (data.PercentStep / 100) * payments;
+				payments = payments + percent_step;
 				pvaf.push(payments);
 				pvac.push(payments);
 				pvab.push(payments);
-				for (j = 1; j < diff_in_years; j++) {
-					percent_step = (data.PercentStep / 100) * payments;
-					payments = payments + percent_step;
-					pvaf.push(payments);
-					pvac.push(payments);
-					pvab.push(payments);
+			}
+			pvaff.push(pvaf[0]);
+			pvafc.push(pvac[0]);
+			pvabb.push(pvab[0]);
+
+			for (h = 1; h < pvaf.length; h++) {
+				var pva = pvaf[h] / (1 + sum) ** h;
+				var pvacc = pvac[h] / (1 + sumc) ** h;
+				var pvabe = pvab[h] / (1 + 0.054) ** h;
+
+				//console.log(h);
+				pvaff.push(pva);
+				pvafc.push(pvacc);
+				pvabb.push(pvabe);
+			}
+			//console.log(pvaff)
+			//console.log(pvaff);
+
+			var pssum = 0.0;
+			var pssumc = 0.0;
+			var bensum = 0.0;
+			var p = 0;
+
+			for (p = 0; p < pvaff.length; p++) {
+				pssum = pssum + pvaff[p];
+			}
+			for (p = 0; p < pvafc.length; p++) {
+				pssumc = pssumc + pvafc[p];
+			}
+
+			for (p = 0; p < pvabb.length; p++) {
+				bensum = bensum + pvabb[p];
+			}
+			console.log("LCP Flooring with Percent Step: ", pssum);
+			console.log("LCP Ceiling with Percent Step: ", pssumc);
+			console.log("Beneficiary Protection with Percent Step: ", bensum);
+
+			//Beneficiary Protection
+			var date2 = new Date();
+			const diffTime = Math.abs(pmntStartDate - date2);
+			const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+			var kk = diffDays / 365;
+
+			var benff = pssum / (1 + ann_interest_rate) ** kk;
+			var benfc = pssumc / (1 + ann_interest_rate_c) ** kk;
+
+			data.PVA_LCP_Flooring = pssum;
+			data.PVA_LCP_Ceiling = pssumc;
+			data.LCP_BEN = Math.ceil(bensum / 5000) * 5000; //Math.round(formulajs.FLOORPRECISE(bensum, 5000))+5000;
+			console.log(data.LCP_BEN);
+			sendPayload.pva = pssum;
+			sendPayload.pvc = pssumc;
+			sendPayload.ben_benfit = Math.ceil(bensum / 5000) * 5000; //Math.round(formulajs.FLOORPRECISE(bensum, 5000))+5000;
+			sendPayload.status = 200;
+			sendPayload.message = "Success";
+			html_output =
+				"<p><strong>Min Offer:</strong> " +
+				pssum +
+				"</p><p><strong>Max Offer</strong>: " +
+				pssumc +
+				"</p><p><strong>Family Protection</strong>: " +
+				Math.ceil(bensum / 5000) * 5000 +
+				"</p>";
+			sendPayload.html_ = html_output;
+			console.log(
+				"Beneficiary Protection LCP Flooring with Percent Step: ",
+				benff
+			);
+			console.log("Beneficiary Protection Ceiling with Percent Step: ", benfc);
+		} else {
+			for (j = 0; j < diff_in_years; j++) {
+				if (data.PaymentMode == "Weekly") {
+					var pva = payments + (payments * (1 - (1 + rpr) ** -52)) / rpr;
+					var pvacm = payments + (payments * (1 - (1 + rprc) ** -52)) / rprc;
+					var pvabm = payments + (payments * (1 - (1 + rprb) ** -52)) / rprb;
 				}
-				pvaff.push(pvaf[0]);
-				pvafc.push(pvac[0]);
-				pvabb.push(pvab[0]);
-
-				for (h = 1; h < pvaf.length; h++) {
-					var pva = pvaf[h] / (1 + sum) ** h;
-					var pvacc = pvac[h] / (1 + sumc) ** h;
-					var pvabe = pvab[h] / (1 + 0.054) ** h;
-
-					//console.log(h);
-					pvaff.push(pva);
-					pvafc.push(pvacc);
-					pvabb.push(pvabe);
+				if (data.PaymentMode == "Monthly") {
+					var pva = payments + (payments * (1 - (1 + rpr) ** -11)) / rpr;
+					var pvacm = payments + (payments * (1 - (1 + rprc) ** -11)) / rprc;
+					var pvabm = payments + (payments * (1 - (1 + rprb) ** -11)) / rprb;
 				}
-				//console.log(pvaff)
-				//console.log(pvaff);
-
-				var pssum = 0.0;
-				var pssumc = 0.0;
-				var bensum = 0.0;
-				var p = 0;
-
-				for (p = 0; p < pvaff.length; p++) {
-					pssum = pssum + pvaff[p];
+				if (data.PaymentMode == "Quarterly") {
+					var pva = payments + (payments * (1 - (1 + rpr) ** -3)) / rpr;
+					var pvacm = payments + (payments * (1 - (1 + rprc) ** -3)) / rprc;
+					var pvabm = payments + (payments * (1 - (1 + rprb) ** -3)) / rprb;
 				}
-				for (p = 0; p < pvafc.length; p++) {
-					pssumc = pssumc + pvafc[p];
+				if (data.PaymentMode == "Semiannually") {
+					var pva = payments + (payments * (1 - (1 + rpr) ** -1)) / rpr;
+					var pvacm = payments + (payments * (1 - (1 + rprc) ** -1)) / rprc;
+					var pvabm = payments + (payments * (1 - (1 + rprb) ** -1)) / rprb;
 				}
+				pvaf.push(pva);
+				pvac.push(pvacm);
+				pvab.push(pvabm);
+				//pmntStartDate.setMonth(pmntStartDate.getMonth()+12);
+				payments = payments + percent_step;
+				percent_step = (data.PercentStep / 100) * payments;
+				//console.log("payments",j,payments);
+			}
+			pvaff.push(pvaf[0]);
+			pvafc.push(pvac[0]);
+			pvabb.push(pvab[0]);
 
-				for (p = 0; p < pvabb.length; p++) {
-					bensum = bensum + pvabb[p];
-				}
-				console.log("LCP Flooring with Percent Step: ", pssum);
-				console.log("LCP Ceiling with Percent Step: ", pssumc);
-				console.log("Beneficiary Protection with Percent Step: ", bensum);
+			for (h = 1; h < pvaf.length; h++) {
+				var pva = pvaf[h] / (1 + ann_interest_rate) ** h;
+				var pvaco = pvac[h] / (1 + ann_interest_rate_c) ** h;
+				var benci = pvab[h] / (1 + ann_interest_rate_b) ** h;
+				//console.log(h);
+				pvaff.push(pva);
+				pvafc.push(pvaco);
+				pvabb.push(benci);
+			}
+			//console.log(pvaff)
+			//console.log(pvaff);
 
-				//Beneficiary Protection
-				var date2 = new Date();
-				const diffTime = Math.abs(pmntStartDate - date2);
-				const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-				var kk = diffDays / 365;
+			var pssum = 0.0;
+			var pssumc = 0.0;
+			var bensum = 0.0;
+			var p = 0;
 
-				var benff = pssum / (1 + ann_interest_rate) ** kk;
-				var benfc = pssumc / (1 + ann_interest_rate_c) ** kk;
+			for (p = 0; p < pvaff.length; p++) {
+				pssum = pssum + pvaff[p];
+			}
+			//console.log(pssum);
+			for (p = 0; p < pvafc.length; p++) {
+				pssumc = pssumc + pvafc[p];
+			}
+			for (p = 0; p < pvabb.length; p++) {
+				bensum = bensum + pvabb[p];
+			}
+			//console.log(pssumc);
 
-				data.PVA_LCP_Flooring = pssum;
-				data.PVA_LCP_Ceiling = pssumc;
-				data.LCP_BEN = Math.ceil(bensum/5000)*5000//Math.round(formulajs.FLOORPRECISE(bensum, 5000))+5000;
-				console.log(data.LCP_BEN)
-				sendPayload.pva = pssum;
-				sendPayload.pvc = pssumc;
-				sendPayload.ben_benfit = Math.ceil(bensum/5000)*5000//Math.round(formulajs.FLOORPRECISE(bensum, 5000))+5000;
-				sendPayload.status = 200;
-				sendPayload.message = "Success";
-				html_output = "<p><strong>Min Offer:</strong> "+pssum+"</p><p><strong>Max Offer</strong>: "+pssumc+"</p><p><strong>Family Protection</strong>: "+Math.ceil(bensum/5000)*5000+"</p>"
-				sendPayload.html_ = html_output
-				console.log(
-					"Beneficiary Protection LCP Flooring with Percent Step: ",
-					benff
-				);
-				console.log(
-					"Beneficiary Protection Ceiling with Percent Step: ",
-					benfc
-				);
-			} else {
-				for (j = 0; j < diff_in_years; j++) {
-					if (data.PaymentMode == "Weekly") {
-						var pva = payments + (payments * (1 - (1 + rpr) ** -52)) / rpr;
-						var pvacm = payments + (payments * (1 - (1 + rprc) ** -52)) / rprc;
-						var pvabm = payments + (payments * (1 - (1 + rprb) ** -52)) / rprb;
-					}
-					if (data.PaymentMode == "Monthly") {
-						var pva = payments + (payments * (1 - (1 + rpr) ** -11)) / rpr;
-						var pvacm = payments + (payments * (1 - (1 + rprc) ** -11)) / rprc;
-						var pvabm = payments + (payments * (1 - (1 + rprb) ** -11)) / rprb;
-					}
-					if (data.PaymentMode == "Quarterly") {
-						var pva = payments + (payments * (1 - (1 + rpr) ** -3)) / rpr;
-						var pvacm = payments + (payments * (1 - (1 + rprc) ** -3)) / rprc;
-						var pvabm = payments + (payments * (1 - (1 + rprb) ** -3)) / rprb;
-					}
-					if (data.PaymentMode == "Semiannually") {
-						var pva = payments + (payments * (1 - (1 + rpr) ** -1)) / rpr;
-						var pvacm = payments + (payments * (1 - (1 + rprc) ** -1)) / rprc;
-						var pvabm = payments + (payments * (1 - (1 + rprb) ** -1)) / rprb;
-					}
-					pvaf.push(pva);
-					pvac.push(pvacm);
-					pvab.push(pvabm);
-					//pmntStartDate.setMonth(pmntStartDate.getMonth()+12);
-					payments = payments + percent_step;
-					percent_step = (data.PercentStep / 100) * payments;
-					//console.log("payments",j,payments);
-				}
-				pvaff.push(pvaf[0]);
-				pvafc.push(pvac[0]);
-				pvabb.push(pvab[0]);
+			console.log("LCP Flooring with Percent Step: ", pssum);
+			console.log("LCP Ceiling with Percent Step: ", pssumc);
+			console.log("Beneficiary Protection with Percent Step: ", bensum);
+			console.log(pmntStartDate);
+			console.log(pmntEndDate);
 
-				for (h = 1; h < pvaf.length; h++) {
-					var pva = pvaf[h] / (1 + ann_interest_rate) ** h;
-					var pvaco = pvac[h] / (1 + ann_interest_rate_c) ** h;
-					var benci = pvab[h] / (1 + ann_interest_rate_b) ** h;
-					//console.log(h);
-					pvaff.push(pva);
-					pvafc.push(pvaco);
-					pvabb.push(benci);
-				}
-				//console.log(pvaff)
-				//console.log(pvaff);
+			//Beneficiary Protection
+			var date2 = new Date();
+			const diffTime = Math.abs(pmntStartDate - date2);
+			const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+			var kk = diffDays / 365;
+			console.log(kk);
 
-				var pssum = 0.0;
-				var pssumc = 0.0;
-				var bensum = 0.0;
-				var p = 0;
+			var benff = pssum / (1 + ann_interest_rate) ** kk;
+			var benfc = pssumc / (1 + ann_interest_rate_c) ** kk;
 
-				for (p = 0; p < pvaff.length; p++) {
-					pssum = pssum + pvaff[p];
-				}
-				//console.log(pssum);
-				for (p = 0; p < pvafc.length; p++) {
-					pssumc = pssumc + pvafc[p];
-				}
-				for (p = 0; p < pvabb.length; p++) {
-					bensum = bensum + pvabb[p];
-				}
-				//console.log(pssumc);
+			console.log(
+				"Beneficiary Protection LCP Flooring with Percent Step: ",
+				benff
+			);
+			console.log("Beneficiary Protection Ceiling with Percent Step: ", benfc);
 
-				console.log("LCP Flooring with Percent Step: ", pssum);
-				console.log("LCP Ceiling with Percent Step: ", pssumc);
-				console.log("Beneficiary Protection with Percent Step: ", bensum);
-				console.log(pmntStartDate);
-				console.log(pmntEndDate);
-
-				//Beneficiary Protection
-				var date2 = new Date();
-				const diffTime = Math.abs(pmntStartDate - date2);
-				const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-				var kk = diffDays / 365;
-				console.log(kk);
-
-				var benff = pssum / (1 + ann_interest_rate) ** kk;
-				var benfc = pssumc / (1 + ann_interest_rate_c) ** kk;
-
-				console.log(
-					"Beneficiary Protection LCP Flooring with Percent Step: ",
-					benff
-				);
-				console.log(
-					"Beneficiary Protection Ceiling with Percent Step: ",
-					benfc
-				);
-
-				data.PVA_LCP_Flooring = pssum;
-				data.PVA_LCP_Ceiling = pssumc;
-				data.LCP_BEN = Math.ceil(bensum/5000)*5000//Math.round(formulajs.FLOORPRECISE(bensum, 5000))+5000;
-				console.log(data.LCP_BEN)
-				sendPayload.pva = pssum;
-				sendPayload.pvc = pssumc;
-				sendPayload.ben_benfit = Math.ceil(bensum/5000)*5000//Math.round(formulajs.FLOORPRECISE(bensum, 5000))+5000;
-				sendPayload.status = 200;
-				sendPayload.message = "Success";
-				html_output = "<p><strong>Min Offer:</strong> "+pssum+"</p><p><strong>Max Offer</strong>: "+pssumc+"</p><p><strong>Family Protection</strong>: "+Math.ceil(bensum/5000)*5000+"</p>"
-				sendPayload.html_ = html_output
-		} 
+			data.PVA_LCP_Flooring = pssum;
+			data.PVA_LCP_Ceiling = pssumc;
+			data.LCP_BEN = Math.ceil(bensum / 5000) * 5000; //Math.round(formulajs.FLOORPRECISE(bensum, 5000))+5000;
+			console.log(data.LCP_BEN);
+			sendPayload.pva = pssum;
+			sendPayload.pvc = pssumc;
+			sendPayload.ben_benfit = Math.ceil(bensum / 5000) * 5000; //Math.round(formulajs.FLOORPRECISE(bensum, 5000))+5000;
+			sendPayload.status = 200;
+			sendPayload.message = "Success";
+			html_output =
+				"<p><strong>Min Offer:</strong> " +
+				pssum +
+				"</p><p><strong>Max Offer</strong>: " +
+				pssumc +
+				"</p><p><strong>Family Protection</strong>: " +
+				Math.ceil(bensum / 5000) * 5000 +
+				"</p>";
+			sendPayload.html_ = html_output;
+		}
 	}
-
-
-
 });
 
 module.exports = router;

@@ -16,13 +16,13 @@ connection.on("connected", () => {
 });
 
 const CalculationRoutes = require("./routes/Calculations");
-app.use("/a", CalculationRoutes);
+app.use("/main", CalculationRoutes);
 
 const InsuranceTermRoute = require("./routes/insurance_rating");
-app.use("/bc",InsuranceTermRoute);
+app.use("/bc", InsuranceTermRoute);
 
 const InsuranceCompanyRoute = require("./routes/insurance_company");
-app.use("/bd",InsuranceCompanyRoute);
+app.use("/bd", InsuranceCompanyRoute);
 
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}!`);
