@@ -3,19 +3,15 @@ const CriminalCharges = require("../helperFuntions/LegalRisk/CriminalCharges");
 const DrivingInfractions = require("../helperFuntions/LegalRisk/DrivingInfractions");
 const DuiDwi = require("../helperFuntions/LegalRisk/DuiDwi");
 
-module.exports = async function LegalRiskUnhedge(sectionBaseWeightage) {
+module.exports = async function LegalRiskUnhedge(
+	sectionBaseWeightage,
+	data,
+	sex
+) {
 	var valueList = [];
-	let sex = Dummydata.legalRisk.gender;
-
-	const drivingInfractions = await DrivingInfractions(
-		Dummydata.legalRisk.infractions,
-		sex
-	);
-	const criminalCharges = await CriminalCharges(
-		Dummydata.legalRisk.criminal,
-		sex
-	);
-	const dwidui = await DuiDwi(Dummydata.legalRisk.duidwi, sex);
+	const drivingInfractions = await DrivingInfractions(data.infractions, sex);
+	const criminalCharges = await CriminalCharges(data.criminal, sex);
+	const dwidui = await DuiDwi(data.duidwi, sex);
 
 	valueList.push(drivingInfractions, criminalCharges, dwidui);
 	console.log(valueList);

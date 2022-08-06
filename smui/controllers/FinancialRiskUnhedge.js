@@ -2,14 +2,15 @@ const Dummydata = require("../helperFuntions/Dummydata");
 const Bankcrupt = require("../helperFuntions/FinancialRisk/Bankcrupt");
 const CreditRating = require("../helperFuntions/FinancialRisk/CreditRating");
 
-module.exports = async function FinancialRiskUnhedge(sectionBaseWeightage) {
+module.exports = async function FinancialRiskUnhedge(
+	sectionBaseWeightage,
+	data,
+	sex
+) {
 	var valueList = [];
-	let sex = Dummydata.financialRisk.gender;
-	const bankcrupt = await Bankcrupt(Dummydata.financialRisk.bankcrupt, sex);
-	const creditcardrating = await CreditRating(
-		Dummydata.financialRisk.creditrating,
-		sex
-	);
+
+	const bankcrupt = await Bankcrupt(data.bankcrupt, sex);
+	const creditcardrating = await CreditRating(data.creditrating, sex);
 	valueList.push(bankcrupt, creditcardrating);
 	var ImpactValue = await [].concat.apply([], valueList);
 	MdInitialBaseValues = await ImpactValue.map(

@@ -1,14 +1,14 @@
 const Dummydata = require("../helperFuntions/Dummydata");
 const CreditDecline = require("../helperFuntions/InsuranceRating/CreditDecline");
 const CurrentLifeIns = require("../helperFuntions/InsuranceRating/CurrentLifeIns");
-module.exports = async function InsuranceRatingUnhedge(sectionBaseWeightage) {
+module.exports = async function InsuranceRatingUnhedge(
+	sectionBaseWeightage,
+	data,
+	sex
+) {
 	var valueList = [];
-	let sex = Dummydata.insurance.gender;
-	const currentLifeIns = await CurrentLifeIns(
-		Dummydata.insurance.lifeCoverage,
-		sex
-	);
-	const creditDecline = await CreditDecline(Dummydata.insurance.decline, sex);
+	const currentLifeIns = await CurrentLifeIns(data.lifeCoverage, sex);
+	const creditDecline = await CreditDecline(data.decline, sex);
 
 	valueList.push(currentLifeIns, creditDecline);
 	console.log(valueList);
