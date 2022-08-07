@@ -8,7 +8,7 @@ module.exports = async function Cancerstate(cancerobject, sex) {
 			let yesStateImpact = await JsonConverter(await SqlQueryHandler(yesQuery));
 			yearsLevelQuery = `select impact from cancer_years where gender= "${sex}" and option_ =${cancerobject.level}`;
 			let yearLevelImpact = await JsonConverter(
-				await SqlQueryHandler(yearsLevelQuerys)
+				await SqlQueryHandler(yearsLevelQuery)
 			);
 			return [yesStateImpact[0].impact, yearLevelImpact[0].impact];
 		case "no":
