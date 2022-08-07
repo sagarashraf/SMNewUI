@@ -24,22 +24,39 @@ module.exports = async function MedicalHpUnhedge(
 ) {
 	var valueList = [];
 	const cancerResults = await cancerState(data.cancer, sex);
+	console.log("cancer", cancerResults);
 	const hypertension = await HyperTension(data.hypertension, sex);
+	console.log("hypertension", hypertension);
 	const asthma = await Asthma(data.asthma, sex);
+	console.log("asthma", asthma);
 	const cholesterol = await Cholesterol(data.cholesterol, sex);
+	console.log("cholesterol", cholesterol);
 	const liver = await Liver(data.liver, sex);
+	console.log("liver", liver);
 	const kidney = await Kidney(data.kidney, sex);
+	console.log("kidney", kidney);
 	const sleepApnea = await SleepApnea(data.apnea, sex);
+	console.log("sleepApnea", sleepApnea);
 	const bipolar = await Bipolar(data.bipolar, sex);
+	console.log("bipolar", bipolar);
 	const neurologicalDis = await NeurologicalDis(data.neuroDisorder, sex);
+	console.log("neurologicalDis", neurologicalDis);
 	const psychiatricDis = await PsychiatricDis(data.psychiatric, sex);
+	console.log("psychiatricDis", psychiatricDis);
 	const anxiety = await Anxiety(data.anxiety, sex);
+	console.log("anxietyr", anxiety);
 	const heart = await Heart(data.heartIssue, sex);
+	console.log("heart", heart);
 	const angiography = await Angiography(data.angiography, sex);
+	console.log("angiography", angiography);
 	const diabetes = await Diabetes(data.diabetes, sex);
-	const hiv = await Hiv(data.hiv, sex);
+	console.log("diabetes", diabetes);
+	// const hiv = await Hiv(data.hiv, sex);
+	// console.log("hiv", hiv);
 	const annualCheckup = await AnnualCheckUp(data.checkUp, sex);
+	console.log("annualCheckup", annualCheckup);
 	const medicalHis = await MedIcalHistory(data.medHistory, sex);
+	console.log("medicalHis", medicalHis);
 	valueList.push(
 		cancerResults,
 		hypertension,
@@ -55,7 +72,7 @@ module.exports = async function MedicalHpUnhedge(
 		heart,
 		angiography,
 		diabetes,
-		hiv,
+		// hiv,
 		annualCheckup,
 		medicalHis
 	);

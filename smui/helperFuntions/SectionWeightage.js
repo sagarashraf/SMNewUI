@@ -10,6 +10,7 @@ module.exports = async function Section(age, sex) {
 	var parametersJson = await JsonConverter(parametervalue);
 	console.log("parameters Json", parametersJson);
 	ageQuery = `select impact from age_base where gender = "${sex}" and age = ${age}`;
+	console.log("ageQuery", ageQuery);
 	let ageBase = await SqlQueryHandler(ageQuery);
 	var ageBaseJson = await JsonConverter(ageBase);
 	console.log("age base", ageBaseJson);
