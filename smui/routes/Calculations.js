@@ -85,6 +85,30 @@ router.post("/calculations", async (req, res) => {
 				totalBase.maxBaseRate,
 				totalBase.minBaseRate
 			);
+			//Commission Structure for Unhedge Date
+			//Commission Level 1 for Revenue at 5%
+			let cost_of_deal = 7500;
+			let min_rev_5 = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.05
+			let min_com_rev_5 = (min_rev_5/0.05) - min_rev_5;
+
+			let max_rev_5 = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.05
+			let max_com_rev_5 = (min_rev_5/0.05) - max_rev_5;
+
+			//Commission Level 2 for Revenue at 10%
+			let min_rev_10 = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.1
+			let min_com_rev_10 = (min_rev_10/0.1) - min_rev_10;
+
+			let max_rev_10 = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.1
+			let max_com_rev_10 = (min_rev_10/0.1) - max_rev_10;
+
+
+			//Commission Level 3 for Revenue at 20%
+			let min_rev_20 = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.2
+			let min_com_rev_20 = (min_rev_20/0.2) - min_rev_20;
+
+			let max_rev_20 = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.2
+			let max_com_rev_20 = (min_rev_20/0.2) - max_rev_20;
+
 			//For hedge Date
 			let LCPWithoutAIhedge = LCPQuotesWithoutPercentStep(
 				pmntstartdate,
@@ -94,11 +118,35 @@ router.post("/calculations", async (req, res) => {
 				0.104,
 				0.094
 			);
+			//Commission Structure for Unhedge Date
+			//Commission Level 1 for Revenue at 5%
+			let min_rev_5_h = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.05
+			let min_com_rev_5_h = (min_rev_5_h/0.05) - min_rev_5_h;
+
+			let max_rev_5_h = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.05
+			let max_com_rev_5_h = (min_rev_5_h/0.05) - max_rev_5_h;
+
+			//Commission Level 2 for Revenue at 10%
+			let min_rev_10_h = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.1
+			let min_com_rev_10_h = (min_rev_10_h/0.1) - min_rev_10_h;
+
+			let max_rev_10_h = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.1
+			let max_com_rev_10_h = (min_rev_10_h/0.1) - max_rev_10_h;
+
+
+			//Commission Level 3 for Revenue at 20%
+			let min_rev_20_h = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.2
+			let min_com_rev_20_h = (min_rev_20_h/0.2) - min_rev_20_h;
+
+			let max_rev_20_h = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.2
+			let max_com_rev_20_h = (min_rev_20_h/0.2) - max_rev_20_h;
 			console.log(
 				"LCPWithoutAIUnhedge and hedge",
 				LCPWithoutAIUnhedge,
 				LCPWithoutAIhedge
 			);
+
+
 		} else {
 			// For Unhedge date and Percent Step LCP
 			let LCPWithAIUnhedge = LCPQuotesWithPercentStep(
@@ -110,6 +158,31 @@ router.post("/calculations", async (req, res) => {
 				totalBase.minBaseRate,
 				percentStep
 			);
+			//Commission Structure for Unhedge Date
+			//Commission Level 1 for Revenue at 5%
+			let cost_of_deal = 7500;
+			let min_rev_5 = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.05
+			let min_com_rev_5 = (min_rev_5/0.05) - min_rev_5;
+
+			let max_rev_5 = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.05
+			let max_com_rev_5 = (min_rev_5/0.05) - max_rev_5;
+
+			//Commission Level 2 for Revenue at 10%
+			let min_rev_10 = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.1
+			let min_com_rev_10 = (min_rev_10/0.1) - min_rev_10;
+
+			let max_rev_10 = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.1
+			let max_com_rev_10 = (min_rev_10/0.1) - max_rev_10;
+
+
+			//Commission Level 3 for Revenue at 20%
+			let min_rev_20 = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.2
+			let min_com_rev_20 = (min_rev_20/0.2) - min_rev_20;
+
+			let max_rev_20 = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.2
+			let max_com_rev_20 = (min_rev_20/0.2) - max_rev_20;
+
+			
 			//For Hedge Date and Percent Step LCP
 			let LCPWithAIhedge = LCPQuotesWithPercentStep(
 				pmntstartdate,
@@ -120,6 +193,28 @@ router.post("/calculations", async (req, res) => {
 				0.094,
 				percentStep
 			);
+			//Commission Structure for Unhedge Date
+			//Commission Level 1 for Revenue at 5%
+			let min_rev_5_h = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.05
+			let min_com_rev_5_h = (min_rev_5_h/0.05) - min_rev_5_h;
+
+			let max_rev_5_h = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.05
+			let max_com_rev_5_h = (min_rev_5_h/0.05) - max_rev_5_h;
+
+			//Commission Level 2 for Revenue at 10%
+			let min_rev_10_h = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.1
+			let min_com_rev_10_h = (min_rev_10_h/0.1) - min_rev_10_h;
+
+			let max_rev_10_h = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.1
+			let max_com_rev_10_h = (min_rev_10_h/0.1) - max_rev_10_h;
+
+
+			//Commission Level 3 for Revenue at 20%
+			let min_rev_20_h = ((base_rate_quote - cost_of_deal - min_quote)/2)* 0.2
+			let min_com_rev_20_h = (min_rev_20_h/0.2) - min_rev_20_h;
+
+			let max_rev_20_h = ((base_rate_quote - cost_of_deal - max_quote)/2)* 0.2
+			let max_com_rev_20_h = (min_rev_20_h/0.2) - max_rev_20_h;
 			console.log(
 				"LCPWithAIUnhedge and hedge",
 				LCPWithAIUnhedge,
@@ -153,6 +248,11 @@ router.post("/calculations", async (req, res) => {
 		}
 	}
 	console.log("ddfsd", req.body);
+
+	
+
+
+	
 
 	res.status(200).send("hello");
 });
