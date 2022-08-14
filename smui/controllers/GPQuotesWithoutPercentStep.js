@@ -1,6 +1,6 @@
 const Moment = require("moment");
 //function for calculation of GP without Percent Step
-module.exports = function GP_Min_Max_Quotes(
+module.exports = async function GP_Min_Max_Quotes(
 	pmntStartDate,
 	pmntEndDate,
 	pmntMode,

@@ -1,6 +1,6 @@
 const Moment = require("moment");
 //function for calculation of LCP with Percent Step
-module.exports = function LCP_Min_Max_Quotes_AI(
+module.exports = async function LCP_Min_Max_Quotes_AI(
 	pmntStartDate,
 	pmntEndDate,
 	pmntMode,

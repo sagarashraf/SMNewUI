@@ -1,5 +1,5 @@
 const Moment = require("moment");
-module.exports = function GP_Min_Max_Quotes_AI(
+module.exports = async function GP_Min_Max_Quotes_AI(
 	pmntStartDate,
 	pmntEndDate,
 	pmntMode,

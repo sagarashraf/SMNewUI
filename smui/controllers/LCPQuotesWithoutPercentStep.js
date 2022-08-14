@@ -1,6 +1,6 @@
 //function for calculation of LCP with hedge and unhedge date
 const Moment = require("moment");
-module.exports = function LCP_Min_Max_Quotes(
+module.exports = async function LCP_Min_Max_Quotes(
 	pmntStartDate,
 	pmntEndDate,
 	pmntMode,

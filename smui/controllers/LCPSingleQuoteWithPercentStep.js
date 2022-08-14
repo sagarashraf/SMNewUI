@@ -1,6 +1,6 @@
 const Moment = require("moment");
 //function for calculation of LCP with Percent Step
-module.exports = function LCP_Single_Quote_AI(
+module.exports = async function LCP_Single_Quote_AI(
 	pmntStartDate,
 	pmntEndDate,
 	pmntMode,
@@ -167,7 +167,7 @@ module.exports = function LCP_Single_Quote_AI(
 			var benci = pvab[h] / (1 + ann_interest_rate_b) ** h;
 			//console.log(h);
 			pvaff.push(pva);
-			pvafc.push(pvaco);
+			// pvafc.push(pvaco);
 			pvabb.push(benci);
 		}
 		//console.log(pvaff)

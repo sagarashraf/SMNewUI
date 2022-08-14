@@ -1,6 +1,6 @@
 //function for calculation of LCP with hedge and unhedge date
 const Moment = require("moment");
-module.exports = function LCP_Single_Quote(
+module.exports = async function LCP_Single_Quote(
 	pmntStartDate,
 	pmntEndDate,
 	pmntMode,
@@ -52,7 +52,7 @@ module.exports = function LCP_Single_Quote(
 		//console.log("Max Quotation", pvc);
 		console.log("Beneficiary Protection: ", benbb);
 		return {
-			LCPSingeQuoteWithoutAI: pva,
+			LCPSingleQuoteWithoutAI: pva,
 			LCPBEN: benbb,
 		};
 	} catch (err) {
