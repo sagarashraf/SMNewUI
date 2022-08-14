@@ -3,9 +3,6 @@ module.exports = async function CommissionStructureLevelhedgeWithoutPS(
 	max_quote,
 	min_quote
 ) {
-	console.log("nam tikki 1", base_rate_quote);
-	console.log("nam tikki 2", max_quote);
-	console.log("nam tikki 3", min_quote);
 	let object = {};
 	let cost_of_deal = 7500;
 	//Commission Level 1 for Revenue at 5%
