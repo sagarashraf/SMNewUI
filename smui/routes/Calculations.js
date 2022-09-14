@@ -34,6 +34,7 @@ router.post("/calculations", async (req, res) => {
 	console.log("E", pmntAmount);
 	console.log("F", percentStep);
 	console.log("G", pmntMode);
+	console.log("header", req.headers);
 
 	if (
 		req.body.personalInformation.paymentType == 1 ||
@@ -114,14 +115,36 @@ router.post("/calculations", async (req, res) => {
 				LCPWithoutAIhedge.LCPMinQuotesWithoutAI
 			);
 			//Commission Structure for Unhedge Date
-
-			console.log(
-				"LCPWithoutAIUnhedge and hedge",
+			res.status(200).send({
+				key: "LCP_Without_AI",
 				LCPWithoutAIUnhedge,
 				LCPWithoutAIhedge,
 				CommStructureLevelUnhedge,
-				CommStructureLevelhedge
-			);
+				CommStructureLevelhedge,
+				BaseRateQoutation: base_rate_quote,
+				CostOfInsuranceQoutation: "",
+				CostOfInsurancePaymentAmount: "",
+				LifeExpectency: {
+					AveragLifeExpect: "",
+					YourLifeExpect: "",
+				},
+				MortalityRate: "",
+			});
+			console.log({
+				key: "LCP_Without_AI",
+				LCPWithoutAIUnhedge,
+				LCPWithoutAIhedge,
+				CommStructureLevelUnhedge,
+				CommStructureLevelhedge,
+				BaseRateQoutation: base_rate_quote,
+				CostOfInsuranceQoutation: "",
+				CostOfInsurancePaymentAmount: "",
+				LifeExpectency: {
+					AveragLifeExpect: "",
+					YourLifeExpect: "",
+				},
+				MortalityRate: "",
+			});
 		} else {
 			// For Unhedge date and Percent Step LCP
 			let LCPWithAIUnhedge = await LCPQuotesWithPercentStep(
@@ -165,13 +188,36 @@ router.post("/calculations", async (req, res) => {
 				LCPWithAIhedge.LCPMinQuotesWithAI,
 				LCPWithAIhedge.LCPMaxQuotesWithAI
 			);
-			console.log(
-				"LCPWithAIUnhedge and hedge",
+			res.status(200).send({
+				key: "LCP_With_AI",
 				LCPWithAIUnhedge,
 				LCPWithAIhedge,
 				CommStructureLevelUnhedge,
-				CommStructureLevelhedge
-			);
+				CommStructureLevelhedge,
+				BaseRateQoutation: base_rate_quote,
+				CostOfInsuranceQoutation: "",
+				CostOfInsurancePaymentAmount: "",
+				LifeExpectency: {
+					AveragLifeExpect: "",
+					YourLifeExpect: "",
+				},
+				MortalityRate: "",
+			});
+			console.log({
+				key: "LCP_With_AI",
+				LCPWithAIUnhedge,
+				LCPWithAIhedge,
+				CommStructureLevelUnhedge,
+				CommStructureLevelhedge,
+				BaseRateQoutation: base_rate_quote,
+				CostOfInsuranceQoutation: "",
+				CostOfInsurancePaymentAmount: "",
+				LifeExpectency: {
+					AveragLifeExpect: "",
+					YourLifeExpect: "",
+				},
+				MortalityRate: "",
+			});
 		}
 	} else {
 		let gpCal = await GpCalculations();
@@ -185,7 +231,14 @@ router.post("/calculations", async (req, res) => {
 				gpCal[0].max_impact,
 				gpCal[0].min_impact
 			);
-			console.log("GPWithoutAI", GPWithoutAI);
+			res.status(200).send({
+				key: "GP_Without_AI",
+				GPWithoutAI,
+			});
+			console.log({
+				key: "GP_Without_AI",
+				GPWithoutAI,
+			});
 		} else {
 			let GPWithAI = await GPQuotesWithPercentStep(
 				pmntstartdate,
@@ -196,12 +249,16 @@ router.post("/calculations", async (req, res) => {
 				gpCal[0].min_impact,
 				percentStep
 			);
-
-			console.log("GPWithAI", GPWithAI);
+			res.status(200).send({
+				key: "GP_With_AI",
+				GPWithAI,
+			});
+			console.log({
+				key: "GP_With_AI",
+				GPWithAI,
+			});
 		}
 	}
-
-	res.status(200).send("hello");
 });
 
 //function for calculation of GP with Percent Step

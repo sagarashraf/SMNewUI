@@ -11,13 +11,13 @@ module.exports = async function Angiography(object, sex) {
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
-			return [yesStateImpact[0].impact, yearLevelImpact[0].impact];
+			return [yesStateImpact[0].impact + yearLevelImpact[0].impact];
 
 		case "no":
 			noQuery = `select impact from angiography where gender= "${sex}" and option_ = "no"`;
 			let noStateimpact = await JsonConverter(await SqlQueryHandler(noQuery));
 
-			return [noStateimpact[0].impact, 0];
+			return [noStateimpact[0].impact + 0];
 		default:
 			break;
 	}

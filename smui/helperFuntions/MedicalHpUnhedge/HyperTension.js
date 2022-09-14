@@ -11,7 +11,7 @@ module.exports = async function HyperTension(object, sex) {
 			await SqlQueryHandler(hypertensionQuery)
 		);
 
-		return [hypertensionimpact[0].impact, 0];
+		return [hypertensionimpact[0].impact + 0];
 	} else {
 		hypertensionQuery = `select impact from high_bp where gender= "${sex}" and option_ = "${state}"`;
 		console.log("==?", hypertensionQuery);
@@ -26,6 +26,6 @@ module.exports = async function HyperTension(object, sex) {
 		);
 		console.log("==?", hypertensionyearsimpact);
 
-		return [hypertensionimpact[0].impact, hypertensionyearsimpact[0].impact];
+		return [hypertensionimpact[0].impact + hypertensionyearsimpact[0].impact];
 	}
 };

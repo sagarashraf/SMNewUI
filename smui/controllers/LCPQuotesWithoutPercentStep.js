@@ -22,11 +22,11 @@ module.exports = async function LCP_Min_Max_Quotes(
 			m = 52.0;
 		}
 		if (pmntMode == "Monthly") {
+			freq =
+				pmntEndDate.getMonth() -
+				pmntStartDate.getMonth() +
+				12 * (pmntEndDate.getFullYear() - pmntStartDate.getFullYear());
 			m = 12.0;
-			let days = DateDiff(pmntStartDate,pmntEndDate);
-			let y = days/365
-			freq = m * y + 1
-			
 		}
 		if (pmntMode == "Quarterly") {
 			var beginDate = Moment(pmntStartDate);

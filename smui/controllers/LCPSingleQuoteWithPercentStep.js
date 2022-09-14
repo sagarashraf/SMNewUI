@@ -195,7 +195,7 @@ module.exports = async function LCP_Single_Quote_AI(
 		console.log("Beneficiary Protection with Percent Step: ", bensum);
 		return {
 			LCPSingleQuoteWithAI: pssum,
-			LCPBEN: bensum,
+			//LCPBEN: bensum,
 		};
 		console.log(pmntStartDate);
 		console.log(pmntEndDate);

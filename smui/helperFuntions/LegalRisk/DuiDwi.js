@@ -11,7 +11,7 @@ module.exports = async function DuiDwi(object, sex) {
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
-			return [yesStateImpact[0].impact, yearLevelImpact[0].impact];
+			return [yesStateImpact[0].impact + yearLevelImpact[0].impact];
 		case "no":
 			noQuery = `select impact from dui_dwi where gender= "${sex}" and option_ = "no"`;
 			let noStateimpact = await JsonConverter(await SqlQueryHandler(noQuery));

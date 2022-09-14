@@ -53,7 +53,7 @@ module.exports = async function LCP_Single_Quote(
 		console.log("Beneficiary Protection: ", benbb);
 		return {
 			LCPSingleQuoteWithoutAI: pva,
-			LCPBEN: benbb,
+			//LCPBEN: benbb,
 		};
 	} catch (err) {
 		return {
