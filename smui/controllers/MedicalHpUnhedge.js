@@ -49,8 +49,8 @@ module.exports = async function MedicalHpUnhedge(
 	console.log("heart", heart);
 	const angiography = await Angiography(data.angiography, sex);
 	console.log("angiography", angiography);
-	const diabetes = await Diabetes(data.diabetes, sex);
-	console.log("diabetes", diabetes);
+	//const diabetes = await Diabetes(data.diabetes, sex);
+	//console.log("diabetes", diabetes);
 	// const hiv = await Hiv(data.hiv, sex);
 	// console.log("hiv", hiv);
 	const annualCheckup = await AnnualCheckUp(data.checkUp, sex);
@@ -71,7 +71,7 @@ module.exports = async function MedicalHpUnhedge(
 		anxiety,
 		heart,
 		angiography,
-		diabetes,
+		//diabetes,
 		// hiv,
 		annualCheckup,
 		medicalHis

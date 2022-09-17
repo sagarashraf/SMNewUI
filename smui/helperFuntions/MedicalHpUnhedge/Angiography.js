@@ -2,6 +2,7 @@ const JsonConverter = require("../JsonConverter");
 const SqlQueryHandler = require("../SqlQueryHandler");
 
 module.exports = async function Angiography(object, sex) {
+	console.log("Angiography", object);
 	switch (object.state) {
 		case "yes":
 			yesQuery = `select impact from angiography where gender= "${sex}" and option_ = "yes"`;
@@ -11,6 +12,7 @@ module.exports = async function Angiography(object, sex) {
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
+			console.log(yesQuery, yearsLevelQuery, yesStateImpact, yearLevelImpact);
 			return [yesStateImpact[0].impact + yearLevelImpact[0].impact];
 
 		case "no":
