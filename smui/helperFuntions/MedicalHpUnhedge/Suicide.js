@@ -11,7 +11,7 @@ module.exports = async function Suicide(object, sex) {
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
-			let type = `select imapct from suicide_options where gender= "${sex}" and option_ = "${cancerobject.type}" `;
+			let type = `select impact from suicide_options where gender= "${sex}" and option_ = "${object.type}" `;
 			let typeImpact = await JsonConverter(await SqlQueryHandler(type));
 			return [
 				yesStateImpact[0]?.impact +

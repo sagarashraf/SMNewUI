@@ -11,7 +11,7 @@ module.exports = async function PainManagement(object, sex) {
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
-			let type = `select imapct from pain_management_options where gender= "${sex}" and option_ = "${cancerobject.type}" `;
+			let type = `select impact from pain_management_options where gender= "${sex}" and option_ = "${object.type}" `;
 
 			let typeImpact = await JsonConverter(await SqlQueryHandler(type));
 

@@ -20,6 +20,7 @@ const LCPSingleQuoteWithPercentStep = require("../controllers/LCPSingleQuoteWith
 const CommissionStructureLevel = require("../controllers/CommissionStructureLevel");
 var connection = config.connection;
 router.post("/calculations", async (req, res) => {
+	console.log(req.body);
 	let pmntstartdate = new Date(req.body.paymentInfo.startDate);
 	let pmntEndDate_hedge = new Date(req.body.paymentInfo.calEndDateHedge);
 	let pmntEndDate_unhedge = new Date(req.body.paymentInfo.calEndDateUnhedge);

@@ -11,7 +11,7 @@ module.exports = async function NeurologicalDis(object, sex) {
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
-			let type = `select imapct from neuro_disorder_options where gender= "${sex}" and option_ = "${cancerobject.type}" `;
+			let type = `select impact from neuro_disorder_options where gender= "${sex}" and option_ = "${object.type}" `;
 
 			let typeImpact = await JsonConverter(await SqlQueryHandler(type));
 

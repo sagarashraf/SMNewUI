@@ -10,8 +10,10 @@ module.exports = async function Cancerstate(cancerobject, sex) {
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
-			let type = `select imapct from cancer_options where gender= "${sex}" and option_ = "${cancerobject.type}" `;
+			let type = `select impact from cancer_options where gender= "${sex}" and option_ = "${cancerobject.type}" `;
+
 			let typeImpact = await JsonConverter(await SqlQueryHandler(type));
+
 			return [
 				yesStateImpact[0]?.impact +
 					yearLevelImpact[0]?.impact +

@@ -6,13 +6,15 @@ module.exports = async function Lungs(object, sex) {
 		case 1:
 			yesQuery = `select impact from lung_disease where gender= "${sex}" and option_ = "1"`;
 			let yesStateImpact = await JsonConverter(await SqlQueryHandler(yesQuery));
-
+			console.log(yesStateImpact);
 			yearsLevelQuery = `select impact from lung_disease_years where gender= "${sex}" and option_ =${object.level}`;
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
-			let type = `select imapct from lung_disease_options where gender= "${sex}" and option_ = "${cancerobject.type}" `;
+			console.log(yearLevelImpact);
+			let type = `select impact from lung_disease_options where gender= "${sex}" and option_ = "${object.type}" `;
 			let typeImpact = await JsonConverter(await SqlQueryHandler(type));
+			console.log(typeImpact);
 			return [
 				yesStateImpact[0]?.impact +
 					yearLevelImpact[0]?.impact +

@@ -15,13 +15,21 @@ module.exports = async function LifeStyleUnhedge(
 ) {
 	var valueList = [];
 	const physicallyActive = await PhysicallyActive(data.phyActive, sex);
+	console.log("physicallyActive", physicallyActive);
 	const fruitVegies = await FruitVeg(data.fruitVeg, sex);
+	console.log("fruitVegies", fruitVegies);
 	const physicalDisabilities = await PhysicalDisability(data.disabilities, sex);
-	const tobacco = await Tobacco(data.tobacco, sex);
+	console.log("physicalDisabilities", physicalDisabilities);
+	const tobacco = await Tobacco(data.smoke, sex);
+	console.log("tobacco", tobacco);
 	const drugAbused = await DrugAbuse(data.drugabuse, sex);
+	console.log("drugAbused", drugAbused);
 	const physicalActivities = await PhysicalActivities(data.phyActivities, sex);
+	console.log("physicalActivities", physicalActivities);
 	const fruitvegPattern = await FruitVegPattern(data.fruitvegportion, sex);
+	console.log("fruitvegPattern", fruitvegPattern);
 	const alchoholintake = await Alchohol(data.alchohol, sex);
+	console.log("alchoholintake", alchoholintake);
 	valueList.push(
 		alchoholintake,
 		fruitvegPattern,
