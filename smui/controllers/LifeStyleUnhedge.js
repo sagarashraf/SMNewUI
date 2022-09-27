@@ -14,6 +14,7 @@ module.exports = async function LifeStyleUnhedge(
 	sex
 ) {
 	var valueList = [];
+	var LifeExpectancy = [];
 	const physicallyActive = await PhysicallyActive(data.phyActive, sex);
 	console.log("physicallyActive", physicallyActive);
 	const fruitVegies = await FruitVeg(data.fruitVeg, sex);
@@ -31,16 +32,28 @@ module.exports = async function LifeStyleUnhedge(
 	const alchoholintake = await Alchohol(data.alchohol, sex);
 	console.log("alchoholintake", alchoholintake);
 	valueList.push(
-		alchoholintake,
-		fruitvegPattern,
-		physicalActivities,
-		drugAbused,
-		tobacco,
-		physicalDisabilities,
-		fruitVegies,
-		physicallyActive
+		alchoholintake[0]?.impact,
+		fruitvegPattern[0]?.impact,
+		physicalActivities[0]?.impact,
+		drugAbused[0]?.impact,
+		tobacco[0]?.impact,
+		physicalDisabilities[0]?.impact,
+		fruitVegies[0]?.impact,
+		physicallyActive[0]?.impact
 	);
+
 	console.log(valueList);
+	LifeExpectancy.push(
+		alchoholintake[0]?.life_exp_val,
+		fruitvegPattern[0]?.life_exp_val,
+		physicalActivities[0]?.life_exp_val,
+		drugAbused[0]?.life_exp_val,
+		tobacco[0]?.life_exp_val,
+		physicalDisabilities[0]?.life_exp_val,
+		fruitVegies[0]?.life_exp_val,
+		physicallyActive[0]?.life_exp_val
+	);
+	console.log("LifeExpectancy life style", LifeExpectancy);
 	var ImpactValue = await [].concat.apply([], valueList);
 	MdInitialBaseValues = await ImpactValue.map(
 		(x) => x * sectionBaseWeightage[1]

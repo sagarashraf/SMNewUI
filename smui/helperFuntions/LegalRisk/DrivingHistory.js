@@ -3,18 +3,23 @@ const SqlQueryHandler = require("../SqlQueryHandler");
 module.exports = async function DrivingHistory(option, sex) {
 	switch (option.state) {
 		case 1:
-			yesQuery = `select impact from driving_history where gender= "${sex}" and option_ = "1"`;
+			yesQuery = `select impact, life_exp_val from driving_history where gender= "${sex}" and option_ = "1"`;
 			let yesStateImpact = await JsonConverter(await SqlQueryHandler(yesQuery));
-			let type = `select impact from driving_history_options where gender= "${sex}" and option_ = "${option.type}" `;
+			let type = `select impact, life_exp_val from driving_history_options where gender= "${sex}" and option_ = "${option.type}" `;
 			let typeImpact = await JsonConverter(await SqlQueryHandler(type));
-			console.log("yesStateImpact DrivingHistory", yesStateImpact);
-			console.log("typeImpact DrivingHistory", typeImpact);
-			return [yesStateImpact[0]?.impact + typeImpact[0]?.impact];
+			let totalImpact = yesStateImpact[0]?.impact + typeImpact[0]?.impact;
+			return [
+				{
+					impact: totalImpact,
+					life_exp_val:
+						yesStateImpact[0]?.life_exp_val + typeImpact[0]?.life_exp_val,
+				},
+			];
 		case 0:
-			noQuery = `select impact from driving_history where gender= "${sex}" and option_ = "no"`;
+			noQuery = `select impact, life_exp_val from driving_history where gender= "${sex}" and option_ = "no"`;
 			let noStateimpact = await JsonConverter(await SqlQueryHandler(noQuery));
 
-			return [noStateimpact[0]?.impact];
+			return noStateimpact;
 		default:
 			break;
 	}

@@ -10,13 +10,25 @@ module.exports = async function LegalRiskUnhedge(
 	sex
 ) {
 	var valueList = [];
+	var LifeExpectancy = [];
 	// const drivingInfractions = await DrivingInfractions(data.infractions, sex);
 	const criminalCharges = await CriminalCharges(data.criminal, sex);
 	const drivinghistory = await DrivingHistory(data.drivingHistory, sex);
 	const assault = await Assault(data.assault, sex);
 
-	valueList.push(assault, criminalCharges, drivinghistory);
+	valueList.push(
+		assault[0]?.impact,
+		criminalCharges[0]?.impact,
+		drivinghistory[0]?.impact
+	);
+
 	console.log(valueList);
+	LifeExpectancy.push(
+		assault[0]?.life_exp_val,
+		criminalCharges[0]?.life_exp_val,
+		drivinghistory[0]?.life_exp_val
+	);
+	console.log("LifeExpectancy legal risk", LifeExpectancy);
 	var ImpactValue = await [].concat.apply([], valueList);
 	MdInitialBaseValues = await ImpactValue.map(
 		(x) => x * sectionBaseWeightage[2]

@@ -5,25 +5,33 @@ SqlQueryHandler;
 module.exports = async function HyperTension(object, sex) {
 	let state = object.state;
 	if (state == "0" || state == "3") {
-		hypertensionQuery = `select impact from high_bp where gender= "${sex}" and option_ = "${state}"`;
+		hypertensionQuery = `select impact, life_exp_val from high_bp where gender= "${sex}" and option_ = "${state}"`;
 
 		let hypertensionimpact = await JsonConverter(
 			await SqlQueryHandler(hypertensionQuery)
 		);
 
-		return [hypertensionimpact[0]?.impact + 0];
+		return hypertensionimpact;
 	} else {
-		hypertensionQuery = `select impact from high_bp where gender= "${sex}" and option_ = "${state}"`;
+		hypertensionQuery = `select impact, life_exp_val from high_bp where gender= "${sex}" and option_ = "${state}"`;
 		let hypertensionimpact = await JsonConverter(
 			await SqlQueryHandler(hypertensionQuery)
 		);
 
-		hypertensionyears = `select impact from high_bp_years where gender= "${sex}" and option_ =${object.level}`;
+		hypertensionyears = `select impact, life_exp_val from high_bp_years where gender= "${sex}" and option_ =${object.level}`;
 
 		let hypertensionyearsimpact = await JsonConverter(
 			await SqlQueryHandler(hypertensionyears)
 		);
-
-		return [hypertensionimpact[0]?.impact + hypertensionyearsimpact[0]?.impact];
+		let totalImpact =
+			hypertensionimpact[0]?.impact + hypertensionyearsimpact[0]?.impact;
+		return [
+			{
+				impact: totalImpact,
+				life_exp_val:
+					hypertensionimpact[0]?.life_exp_val +
+					hypertensionyearsimpact[0]?.life_exp_val,
+			},
+		];
 	}
 };

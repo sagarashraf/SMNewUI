@@ -29,6 +29,7 @@ module.exports = async function MedicalHpUnhedge(
 	sex
 ) {
 	var valueList = [];
+	var LifeExpectancy = [];
 	const cancerResults = await cancerState(data.cancer, sex);
 	console.log("cancer", cancerResults);
 	const annualCheckup = await AnnualCheckUp(data.checkUp, sex);
@@ -79,24 +80,43 @@ module.exports = async function MedicalHpUnhedge(
 	// console.log("hiv", hiv);
 
 	valueList.push(
-		cancerResults,
-		annualCheckup,
-		medicalHis,
-		hypertension,
-		cholesterol,
-		lungs,
-		diabetes,
-		liver,
-		kidney,
-		suicide,
-		mentalIssues,
-		neurologicalDis,
-		painManagement,
-		lead,
-		heart,
-		drugAbuse
+		cancerResults[0]?.impact,
+		annualCheckup[0]?.impact,
+		medicalHis[0]?.impact,
+		hypertension[0]?.impact,
+		cholesterol[0]?.impact,
+		lungs[0]?.impact,
+		diabetes[0]?.impact,
+		liver[0]?.impact,
+		kidney[0]?.impact,
+		suicide[0]?.impact,
+		mentalIssues[0]?.impact,
+		neurologicalDis[0]?.impact,
+		painManagement[0]?.impact,
+		lead[0]?.impact,
+		heart[0]?.impact,
+		drugAbuse[0]?.impact
+	);
+	LifeExpectancy.push(
+		cancerResults[0]?.life_exp_val,
+		annualCheckup[0]?.life_exp_val,
+		medicalHis[0]?.life_exp_val,
+		hypertension[0]?.life_exp_val,
+		cholesterol[0]?.life_exp_val,
+		lungs[0]?.life_exp_val,
+		diabetes[0]?.life_exp_val,
+		liver[0]?.life_exp_val,
+		kidney[0]?.life_exp_val,
+		suicide[0]?.life_exp_val,
+		mentalIssues[0]?.life_exp_val,
+		neurologicalDis[0]?.life_exp_val,
+		painManagement[0]?.life_exp_val,
+		lead[0]?.life_exp_val,
+		heart[0]?.life_exp_val,
+		drugAbuse[0]?.life_exp_val
 	);
 	console.log(valueList);
+	console.log("LifeExpectancy ====>", LifeExpectancy);
 	var ImpactValue = await [].concat.apply([], valueList);
 	MdInitialBaseValues = await ImpactValue.map(
 		(x) => x * sectionBaseWeightage[0]
