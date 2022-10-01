@@ -23,35 +23,35 @@ module.exports = async function COI_PAYMENT(
 	let ow_st_non_tob = overweight * st_non_tab;
 	let ob_st_non_tob = obese * st_non_tab;
 
-	if ((smoke = "yes" && weight == "over weight")) {
+	if ((smoke == 1 && weight == "over weight")) {
 		return ow_st_tob;
 	}
-	if ((smoke = "yes" && weight == "average weight")) {
+	if ((smoke == 1 && weight == "average weight")) {
 		return st_tab;
 	}
-	if ((smoke = "yes" && weight == "obese")) {
+	if ((smoke == 1 && weight == "obese")) {
 		return ob_st_tob;
 	}
-	if ((smoke = "yes" && weight == "under weight")) {
+	if ((smoke == 1 && weight == "under weight")) {
 		return uw_st_tob;
 	}
-	if ((smoke = "yes" && weight == "ideal weight")) {
+	if ((smoke == 1 && weight == "ideal weight")) {
 		return preff_tab;
 	}
 
-	if ((smoke = "no" && weight == "over weight")) {
+	if ((smoke == 0 && weight == "over weight")) {
 		return ow_st_non_tob;
 	}
-	if ((smoke = "no" && weight == "average weight")) {
+	if ((smoke == 0 && weight == "average weight")) {
 		return st_non_tab;
 	}
-	if ((smoke = "no" && weight == "obese")) {
+	if ((smoke == 0 && weight == "obese")) {
 		return ob_st_non_tob;
 	}
-	if ((smoke = "no" && weight == "under weight")) {
+	if ((smoke == 0 && weight == "under weight")) {
 		return uw_st_non_tob;
 	}
-	if ((smoke = "no" && weight == "ideal weight")) {
+	if ((smoke == 0 && weight == "ideal weight")) {
 		return st_plus;
 	}
 };
