@@ -16,7 +16,7 @@ module.exports = async function DrivingHistory(option, sex) {
 				},
 			];
 		case 0:
-			noQuery = `select impact, life_exp_val from driving_history where gender= "${sex}" and option_ = "no"`;
+			noQuery = `select impact, life_exp_val from driving_history where gender= "${sex}" and option_ = "0"`;
 			let noStateimpact = await JsonConverter(await SqlQueryHandler(noQuery));
 
 			return noStateimpact;

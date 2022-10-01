@@ -22,6 +22,6 @@ module.exports = async function InsuranceRatingUnhedge(
 	MdInitialBaseValues = await ImpactValue.map(
 		(x) => x * sectionBaseWeightage[4]
 	);
-	let me = MdInitialBaseValues.reduce((a, b) => a + b, 0);
-	return [me];
+	let ins = MdInitialBaseValues.reduce((a, b) => a + b, 0);
+	return { insUnhedge: ins, insLifeExpect: LifeExpectancy };
 };

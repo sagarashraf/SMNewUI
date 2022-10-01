@@ -121,7 +121,7 @@ module.exports = async function MedicalHpUnhedge(
 	MdInitialBaseValues = await ImpactValue.map(
 		(x) => x * sectionBaseWeightage[0]
 	);
-	let me = MdInitialBaseValues.reduce((a, b) => a + b, 0);
+	let med = MdInitialBaseValues.reduce((a, b) => a + b, 0);
 
-	return [me];
+	return { medicalUnhedge: med, medLifeExpect: LifeExpectancy };
 };

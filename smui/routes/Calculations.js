@@ -18,11 +18,9 @@ const GPQuotesWithoutPercentStep = require("../controllers/GPQuotesWithoutPercen
 const LCPSingleQuoteWithoutPercentStep = require("../controllers/LCPSingleQuoteWithoutPercentStep");
 const LCPSingleQuoteWithPercentStep = require("../controllers/LCPSingleQuoteWithPercentStep");
 const CommissionStructureLevel = require("../controllers/CommissionStructureLevel");
-const CostOfInsurancePaymentAmount = require("../controllers/CostOfInsurancePayment");
-const CostOfInsurance = require("../controllers/CostOfInsurance");
-const JsonConverter = require("../JsonConverter");
-const SqlQueryHandler = require("../SqlQueryHandler");
-const CostOfInsurancePayment = require("../controllers/CostOfInsurancePayment");
+const CostOfInsuranceController = require("../controllers/CostOfInsuranceController");
+const AverageLifeExpect = require("../controllers/AverageLifeExpect");
+const YourLifeExpect = require("../controllers/YourLifeExpect");
 var connection = config.connection;
 router.post("/calculations", async (req, res) => {
 	console.log(req.body);
@@ -73,12 +71,22 @@ router.post("/calculations", async (req, res) => {
 			sex
 		);
 		const totalBase = await TotalBaseRate(
-			MedSection,
-			lifestyleUnhedge,
-			legalRisk,
-			financialRiskUnhedge,
-			insurancerating
+			MedSection.medicalUnhedge,
+			lifestyleUnhedge.lifeStyleUnhedge,
+			legalRisk.legalStyleUnhedge,
+			financialRiskUnhedge.finanvaluesUnhedge,
+			insurancerating.insUnhedge
 		);
+		let Avg_life = await AverageLifeExpect(age, sex);
+		const yourAvgExpect = await YourLifeExpect(
+			MedSection.medLifeExpect,
+			lifestyleUnhedge.lifeStyleExpect,
+			legalRisk.legalStyleExpect,
+			financialRiskUnhedge.finvaluesExpect,
+			insurancerating.insLifeExpect,
+			Avg_life
+		);
+		console.log("yourAvgExpect", yourAvgExpect);
 		console.log("Medical", MedSection);
 		console.log("lifestyle", lifestyleUnhedge);
 		console.log("legal", legalRisk);
@@ -108,7 +116,7 @@ router.post("/calculations", async (req, res) => {
 				LCPWithoutAIUnhedge.LCPMinQuotesWithoutAI
 			);
 			//For hedge Date
-			let LCPWithoutAIhedge = await LCPQuotesWithoutPercentStep(
+			var LCPWithoutAIhedge = await LCPQuotesWithoutPercentStep(
 				pmntstartdate,
 				pmntEndDate_hedge,
 				pmntMode,
@@ -121,6 +129,18 @@ router.post("/calculations", async (req, res) => {
 				LCPWithoutAIhedge.LCPMaxQuotesWithoutAI,
 				LCPWithoutAIhedge.LCPMinQuotesWithoutAI
 			);
+			// COST Of INSURANCE
+			let COI = await CostOfInsuranceController(
+				req.body.lifeStyle.smoke.state,
+				req.body.personalInformation.weightBMI,
+				req.body.gender,
+				req.body.age,
+				LCPWithoutAIhedge.LCPBEN,
+				pmntEndDate_hedge,
+				pmntMode
+			);
+			console.log("COI", COI);
+
 			//Commission Structure for Unhedge Date
 			res.status(200).send({
 				key: "LCP_Without_AI",
@@ -129,11 +149,11 @@ router.post("/calculations", async (req, res) => {
 				CommStructureLevelUnhedge,
 				CommStructureLevelhedge,
 				BaseRateQoutation: base_rate_quote,
-				CostOfInsuranceQoutation: "",
-				CostOfInsurancePaymentAmount: "",
+				CostOfInsuranceQoutation: COI.coi_quote,
+				CostOfInsurancePaymentAmount: COI.amount,
 				LifeExpectency: {
-					AveragLifeExpect: "",
-					YourLifeExpect: "",
+					AveragLifeExpect: Avg_life,
+					YourLifeExpect: yourAvgExpect,
 				},
 				MortalityRate: "",
 			});
@@ -180,7 +200,7 @@ router.post("/calculations", async (req, res) => {
 			);
 
 			//For Hedge Date and Percent Step LCP
-			let LCPWithAIhedge = await LCPQuotesWithPercentStep(
+			var LCPWithAIhedge = await LCPQuotesWithPercentStep(
 				pmntstartdate,
 				pmntEndDate_hedge,
 				pmntMode,
@@ -195,6 +215,16 @@ router.post("/calculations", async (req, res) => {
 				LCPWithAIhedge.LCPMinQuotesWithAI,
 				LCPWithAIhedge.LCPMaxQuotesWithAI
 			);
+			let COI = await CostOfInsuranceController(
+				req.body.lifeStyle.smoke.state,
+				req.body.personalInformation.weightBMI,
+				req.body.gender,
+				req.body.age,
+				LCPWithAIhedge.LCPBEN,
+				pmntEndDate_hedge,
+				pmntMode
+			);
+
 			res.status(200).send({
 				key: "LCP_With_AI",
 				LCPWithAIUnhedge,
@@ -205,8 +235,8 @@ router.post("/calculations", async (req, res) => {
 				CostOfInsuranceQoutation: "",
 				CostOfInsurancePaymentAmount: "",
 				LifeExpectency: {
-					AveragLifeExpect: "",
-					YourLifeExpect: "",
+					AveragLifeExpect: Avg_life,
+					YourLifeExpect: yourAvgExpect,
 				},
 				MortalityRate: "",
 			});
@@ -217,8 +247,8 @@ router.post("/calculations", async (req, res) => {
 				CommStructureLevelUnhedge,
 				CommStructureLevelhedge,
 				BaseRateQoutation: base_rate_quote,
-				CostOfInsuranceQoutation: "",
-				CostOfInsurancePaymentAmount: "",
+				CostOfInsuranceQoutation: COI.coi_quote,
+				CostOfInsurancePaymentAmount: COI.amount,
 				LifeExpectency: {
 					AveragLifeExpect: "",
 					YourLifeExpect: "",
@@ -266,106 +296,6 @@ router.post("/calculations", async (req, res) => {
 			});
 		}
 	}
-	let coi_smoke = req.body.lifeStyle.smoke;
-	let coi_weight = req.body.personalInformation.weightBMI;
-	let coi_constfac = 0.001438;
-	let coi_facm = 0;
-	let coi_facf = 0;
-	let coi_death = 0;
-	let coi_sttab = 0;
-	let coi_stplus = 0;
-	let coi_preftab = 0;
-	let coi_uw = 0;
-	let coi_ow = 0;
-	let coi_ob = 0;
-
-
-
-	if(req.body.gender == 0){
-		coi_facf = 1;
-		let factorq = `select factor from age_mulitple_30 where gender= "male" and age = "${req.body.age}`;
-		coi_facm = await JsonConverter(await SqlQueryHandler(factorq));
-		if(LCPWithoutAIhedge.LCPBEN){
-			coi_death = LCPWithoutAIhedge.LCPBEN;
-
-		}
-		if(LCPWithAIhedge){
-			coi_death = LCPWithAIhedge.LCPBEN;
-		}
-		let sttabq = `select factor from standard_tobacco_30 where gender= "male" and age = "${req.body.age}"`;
-		coi_sttab = await JsonConverter(await SqlQueryHandler(sttabq));
-
-		let stplusq = `select factor from standard_plus_30 where gender= "male" and age = "${req.body.age}"`;
-		coi_stplus = await JsonConverter(await SqlQueryHandler(stplusq));
-
-		let preftabq = `select factor from preferred_tobacco_30 where gender= "male" and age = "${req.body.age}"`;
-		coi_preftab = await JsonConverter(await SqlQueryHandler(preftabq));
-
-		let uwq = `select impact from weight_category where weight = "${coi_weight}"`;
-		coi_uw = await JsonConverter(await SqlQueryHandler(uwq));
-
-		let owq = `select impact from weight_category where weight ="${coi_weight}"`;
-		coi_ow = await JsonConverter(await SqlQueryHandler(owq));
-
-		let obq = `select impact from weight_category where weight ="${coi_weight}"`;
-		coi_ob = await JsonConverter(await SqlQueryHandler(obq));
-
-		let amount = await CostOfInsurancePaymentAmount(coi_smoke,coi_weight,coi_constfac,coi_facm,
-			coi_facf,coi_death,coi_sttab,coi_stplus,coi_preftab,coi_uw,coi_ow,coi_ob)
-
-		let curDate = new Date()
-		var coi_pmntStartDate = curDate.setDate(curDate.getDate() + 90);
-
-		let coi_quote = await CostOfInsurance(coi_pmntStartDate,pmntEndDate_hedge,pmntMode,amount,0.04);
-
-
-
-		
-
-	}
-	else{
-		let factorq = `select factor from age_mulitple_30 where gender= "male" and age = "${req.body.age}`;
-		coi_facm = await JsonConverter(await SqlQueryHandler(factorq));
-
-		let factorfq = `select factor from age_mulitple_30 where gender= "female" and age = "${req.body.age}`;
-		coi_facf = await JsonConverter(await SqlQueryHandler(factorfq));
-		if(LCPWithoutAIhedge.LCPBEN){
-			coi_death = LCPWithoutAIhedge.LCPBEN;
-
-		}
-		if(LCPWithAIhedge){
-			coi_death = LCPWithAIhedge.LCPBEN;
-		}
-		let sttabq = `select factor from standard_tobacco_30 where gender= "female" and age = "${req.body.age}"`;
-		coi_sttab = await JsonConverter(await SqlQueryHandler(sttabq));
-
-		let stplusq = `select factor from standard_plus_30 where gender= "female" and age = "${req.body.age}"`;
-		coi_stplus = await JsonConverter(await SqlQueryHandler(stplusq));
-
-		let preftabq = `select factor from preferred_tobacco_30 where gender= "female" and age = "${req.body.age}"`;
-		coi_preftab = await JsonConverter(await SqlQueryHandler(preftabq));
-
-		let uwq = `select impact from weight_category where weight = "${coi_weight}"`;
-		coi_uw = await JsonConverter(await SqlQueryHandler(uwq));
-
-		let owq = `select impact from weight_category where weight ="${coi_weight}"`;
-		coi_ow = await JsonConverter(await SqlQueryHandler(owq));
-
-		let obq = `select impact from weight_category where weight ="${coi_weight}"`;
-		coi_ob = await JsonConverter(await SqlQueryHandler(obq));
-
-		let amount = await CostOfInsurancePaymentAmount(coi_smoke,coi_weight,coi_constfac,coi_facm,
-			coi_facf,coi_death,coi_sttab,coi_stplus,coi_preftab,coi_uw,coi_ow,coi_ob)
-
-		let curDate = new Date()
-		var coi_pmntStartDate = curDate.setDate(curDate.getDate() + 90);
-
-		let coi_quote = await CostOfInsurance(coi_pmntStartDate,pmntEndDate_hedge,pmntMode,amount,0.04);
-
-	}
-	
-
-
 });
 
 //function for calculation of GP with Percent Step

@@ -58,6 +58,9 @@ module.exports = async function LifeStyleUnhedge(
 	MdInitialBaseValues = await ImpactValue.map(
 		(x) => x * sectionBaseWeightage[1]
 	);
-	let me = MdInitialBaseValues.reduce((a, b) => a + b, 0);
-	return [me];
+	let lifeStyle = MdInitialBaseValues.reduce((a, b) => a + b, 0);
+	return {
+		lifeStyleUnhedge: lifeStyle,
+		lifeStyleExpect: LifeExpectancy,
+	};
 };

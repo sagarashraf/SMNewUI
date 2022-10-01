@@ -8,19 +8,22 @@ module.exports = async function FinancialRiskUnhedge(
 	sex
 ) {
 	var valueList = [];
-	var LifeExpectancy = [];
+	var FinanExpectancy = [];
 	const bankcrupt = await Bankcrupt(data.bankcrupt, sex);
 	const creditcardrating = await CreditRating(data.creditrating, sex);
 	valueList.push(bankcrupt[0]?.impact, creditcardrating[0]?.impact);
-	LifeExpectancy.push(
+	FinanExpectancy.push(
 		bankcrupt[0]?.life_exp_val,
 		creditcardrating[0]?.life_exp_val
 	);
-	console.log("LifeExpectancy ---> financial ", LifeExpectancy);
+	console.log("FinanExpectancy ---> financial ", FinanExpectancy);
 	var ImpactValue = await [].concat.apply([], valueList);
 	MdInitialBaseValues = await ImpactValue.map(
 		(x) => x * sectionBaseWeightage[3]
 	);
-	let me = MdInitialBaseValues.reduce((a, b) => a + b, 0);
-	return [me];
+	let finvalues = MdInitialBaseValues.reduce((a, b) => a + b, 0);
+	return {
+		finanvaluesUnhedge: finvalues,
+		finvaluesExpect: FinanExpectancy,
+	};
 };
