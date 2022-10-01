@@ -316,7 +316,7 @@ router.post("/calculations", async (req, res) => {
 		let curDate = new Date()
 		var coi_pmntStartDate = curDate.setDate(curDate.getDate() + 90);
 
-		let coi_quote = await CostOfInsurance(coi_pmntStartDate,pmntEndDate_hedge,pmntMode,amount,totalBase);
+		let coi_quote = await CostOfInsurance(coi_pmntStartDate,pmntEndDate_hedge,pmntMode,amount,0.04);
 
 
 
@@ -360,7 +360,7 @@ router.post("/calculations", async (req, res) => {
 		let curDate = new Date()
 		var coi_pmntStartDate = curDate.setDate(curDate.getDate() + 90);
 
-		let coi_quote = await CostOfInsurance(coi_pmntStartDate,pmntEndDate_hedge,pmntMode,amount,totalBase);
+		let coi_quote = await CostOfInsurance(coi_pmntStartDate,pmntEndDate_hedge,pmntMode,amount,0.04);
 
 	}
 	
