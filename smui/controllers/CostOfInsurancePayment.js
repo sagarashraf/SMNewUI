@@ -10,7 +10,7 @@ module.exports = async function COI_PAYMENT(
 	pref_tab,
 	underweight,
 	overweight,
-	obese
+	Obese
 ) {
 	let st_non_tab = const_factor * death_benefit * factor_male * factor_female;
 	let st_tab = standard_tob * st_non_tab;
@@ -18,10 +18,10 @@ module.exports = async function COI_PAYMENT(
 	let preff_tab = standard_plus * st_non_tab * pref_tab;
 	let uw_st_tob = standard_tob * underweight * st_non_tab;
 	let ow_st_tob = standard_tob * overweight * st_non_tab;
-	let ob_st_tob = standard_tob * obese * st_non_tab;
+	let ob_st_tob = standard_tob * Obese * st_non_tab;
 	let uw_st_non_tob = underweight * st_non_tab;
 	let ow_st_non_tob = overweight * st_non_tab;
-	let ob_st_non_tob = obese * st_non_tab;
+	let ob_st_non_tob = Obese * st_non_tab;
 
 	if ((smoke == 1 && weight == "over weight")) {
 		return ow_st_tob;
@@ -29,7 +29,7 @@ module.exports = async function COI_PAYMENT(
 	if ((smoke == 1 && weight == "average weight")) {
 		return st_tab;
 	}
-	if ((smoke == 1 && weight == "obese")) {
+	if ((smoke == 1 && weight == "Obese")) {
 		return ob_st_tob;
 	}
 	if ((smoke == 1 && weight == "under weight")) {
@@ -45,7 +45,7 @@ module.exports = async function COI_PAYMENT(
 	if ((smoke == 0 && weight == "average weight")) {
 		return st_non_tab;
 	}
-	if ((smoke == 0 && weight == "obese")) {
+	if ((smoke == 0 && weight == "Obese")) {
 		return ob_st_non_tob;
 	}
 	if ((smoke == 0 && weight == "under weight")) {
