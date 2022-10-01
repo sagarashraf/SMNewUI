@@ -18,6 +18,11 @@ const GPQuotesWithoutPercentStep = require("../controllers/GPQuotesWithoutPercen
 const LCPSingleQuoteWithoutPercentStep = require("../controllers/LCPSingleQuoteWithoutPercentStep");
 const LCPSingleQuoteWithPercentStep = require("../controllers/LCPSingleQuoteWithPercentStep");
 const CommissionStructureLevel = require("../controllers/CommissionStructureLevel");
+const CostOfInsurancePaymentAmount = require("../controllers/CostOfInsurancePayment");
+const CostOfInsurance = require("../controllers/CostOfInsurance");
+const JsonConverter = require("../JsonConverter");
+const SqlQueryHandler = require("../SqlQueryHandler");
+const CostOfInsurancePayment = require("../controllers/CostOfInsurancePayment");
 var connection = config.connection;
 router.post("/calculations", async (req, res) => {
 	console.log(req.body);
@@ -28,6 +33,7 @@ router.post("/calculations", async (req, res) => {
 	let pmntAmount = parseInt(req.body.paymentInfo.paymentAmount);
 	let pmntMode = req.body.paymentInfo.paymentMode;
 	let percentStep = req.body.paymentInfo.annualIncrese;
+
 	console.log("A", pmntstartdate);
 	console.log("B", pmntEndDate_hedge);
 	console.log("C", pmntEndDate_unhedge);
@@ -260,6 +266,66 @@ router.post("/calculations", async (req, res) => {
 			});
 		}
 	}
+	let coi_smoke = req.body.lifeStyle.smoke;
+	let coi_weight = req.body.personalInformation.weightBMI;
+	let coi_constfac = 0.001438;
+	let coi_facm = 0;
+	let coi_facf = 0;
+	let coi_death = 0;
+	let coi_sttab = 0;
+	let coi_stplus = 0;
+	let coi_preftab = 0;
+	let coi_uw = 0;
+	let coi_ow = 0;
+	let coi_ob = 0;
+
+
+
+	if(req.body.gender == 0){
+		coi_facf = 1;
+		let factorq = `select factor from age_mulitple_30 where gender= "male" and age = "${req.body.age}`;
+		coi_facm = await JsonConverter(await SqlQueryHandler(factorq));
+		if(LCPWithoutAIhedge.LCPBEN){
+			coi_death = LCPWithoutAIhedge.LCPBEN;
+
+		}
+		if(LCPWithAIhedge){
+			coi_death = LCPWithAIhedge.LCPBEN;
+		}
+		let sttabq = `select factor from standard_tobacco_30 where gender= "male" and age = "${req.body.age}"`;
+		coi_sttab = await JsonConverter(await SqlQueryHandler(sttabq));
+
+		let stplusq = `select factor from standard_plus_30 where gender= "male" and age = "${req.body.age}"`;
+		coi_stplus = await JsonConverter(await SqlQueryHandler(stplusq));
+
+		let preftabq = `select factor from preferred_tobacco_30 where gender= "male" and age = "${req.body.age}"`;
+		coi_preftab = await JsonConverter(await SqlQueryHandler(preftabq));
+
+		let uwq = `select impact from weight_category where weight = "${coi_weight}"`;
+		coi_uw = await JsonConverter(await SqlQueryHandler(uwq));
+
+		let owq = `select impact from weight_category where weight ="${coi_weight}"`;
+		coi_ow = await JsonConverter(await SqlQueryHandler(owq));
+
+		let obq = `select impact from weight_category where weight ="${coi_weight}"`;
+		coi_ob = await JsonConverter(await SqlQueryHandler(obq));
+
+		let amount = await CostOfInsurancePaymentAmount(coi_smoke,coi_weight,coi_constfac,coi_facm,
+			coi_facf,coi_death,coi_sttab,coi_stplus,coi_preftab,coi_uw,coi_ow,coi_ob)
+
+		let curDate = new Date()
+		var coi_pmntStartDate = curDate.setDate(curDate.getDate() + 90);
+
+		let coi_quote = await CostOfInsurance(coi_pmntStartDate,pmntEndDate_hedge,pmntMode,amount,totalBase);
+
+
+
+		
+
+	}
+	
+
+
 });
 
 //function for calculation of GP with Percent Step
