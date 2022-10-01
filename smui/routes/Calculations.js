@@ -323,6 +323,46 @@ router.post("/calculations", async (req, res) => {
 		
 
 	}
+	else{
+		let factorq = `select factor from age_mulitple_30 where gender= "male" and age = "${req.body.age}`;
+		coi_facm = await JsonConverter(await SqlQueryHandler(factorq));
+
+		let factorfq = `select factor from age_mulitple_30 where gender= "female" and age = "${req.body.age}`;
+		coi_facf = await JsonConverter(await SqlQueryHandler(factorfq));
+		if(LCPWithoutAIhedge.LCPBEN){
+			coi_death = LCPWithoutAIhedge.LCPBEN;
+
+		}
+		if(LCPWithAIhedge){
+			coi_death = LCPWithAIhedge.LCPBEN;
+		}
+		let sttabq = `select factor from standard_tobacco_30 where gender= "female" and age = "${req.body.age}"`;
+		coi_sttab = await JsonConverter(await SqlQueryHandler(sttabq));
+
+		let stplusq = `select factor from standard_plus_30 where gender= "female" and age = "${req.body.age}"`;
+		coi_stplus = await JsonConverter(await SqlQueryHandler(stplusq));
+
+		let preftabq = `select factor from preferred_tobacco_30 where gender= "female" and age = "${req.body.age}"`;
+		coi_preftab = await JsonConverter(await SqlQueryHandler(preftabq));
+
+		let uwq = `select impact from weight_category where weight = "${coi_weight}"`;
+		coi_uw = await JsonConverter(await SqlQueryHandler(uwq));
+
+		let owq = `select impact from weight_category where weight ="${coi_weight}"`;
+		coi_ow = await JsonConverter(await SqlQueryHandler(owq));
+
+		let obq = `select impact from weight_category where weight ="${coi_weight}"`;
+		coi_ob = await JsonConverter(await SqlQueryHandler(obq));
+
+		let amount = await CostOfInsurancePaymentAmount(coi_smoke,coi_weight,coi_constfac,coi_facm,
+			coi_facf,coi_death,coi_sttab,coi_stplus,coi_preftab,coi_uw,coi_ow,coi_ob)
+
+		let curDate = new Date()
+		var coi_pmntStartDate = curDate.setDate(curDate.getDate() + 90);
+
+		let coi_quote = await CostOfInsurance(coi_pmntStartDate,pmntEndDate_hedge,pmntMode,amount,totalBase);
+
+	}
 	
 
 
