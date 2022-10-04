@@ -20,16 +20,20 @@ const NeurologicalDis = require("../helperFuntions/MedicalHpUnhedge/Neurological
 const PainManagement = require("../helperFuntions/MedicalHpUnhedge/PainManagement");
 const Lead = require("../helperFuntions/MedicalHpUnhedge/LeadPoison");
 const DrugAbuse = require("../helperFuntions/MedicalHpUnhedge/DrugAbuse");
+const BMIWeight = require("../helperFuntions/MedicalHpUnhedge/BMIWeight");
 const PsychiatricDis = require("../helperFuntions/MedicalHpUnhedge/PsychiatricDis");
+
 const SleepApnea = require("../helperFuntions/MedicalHpUnhedge/SleepApnea");
 
 module.exports = async function MedicalHpUnhedge(
 	sectionBaseWeightage,
 	data,
-	sex
+	sex,
+	BMIW
 ) {
 	var valueList = [];
 	var LifeExpectancy = [];
+	var MortalityRate = [];
 	const cancerResults = await cancerState(data.cancer, sex);
 	console.log("cancer", cancerResults);
 	const annualCheckup = await AnnualCheckUp(data.checkUp, sex);
@@ -62,6 +66,8 @@ module.exports = async function MedicalHpUnhedge(
 	console.log("heart", heart);
 	const drugAbuse = await DrugAbuse(data.drug, sex);
 	console.log("drugAbuse", drugAbuse);
+	const BMIweight = await BMIWeight(BMIW);
+	console.log("BMIweight _____-_____ BMIweight", BMIweight);
 	//const sleepApnea = await SleepApnea(data.apnea, sex);
 	//console.log("sleepApnea", sleepApnea);
 	// const bipolar = await Bipolar(data.bipolar, sex);
@@ -95,7 +101,8 @@ module.exports = async function MedicalHpUnhedge(
 		painManagement[0]?.impact,
 		lead[0]?.impact,
 		heart[0]?.impact,
-		drugAbuse[0]?.impact
+		drugAbuse[0]?.impact,
+		BMIweight?.impact
 	);
 	LifeExpectancy.push(
 		cancerResults[0]?.life_exp_val,
@@ -113,8 +120,26 @@ module.exports = async function MedicalHpUnhedge(
 		painManagement[0]?.life_exp_val,
 		lead[0]?.life_exp_val,
 		heart[0]?.life_exp_val,
-		drugAbuse[0]?.life_exp_val
+		drugAbuse[0]?.life_exp_val,
+		BMIweight?.life_exp_val
 	);
+	MortalityRate.push(
+		BMIweight?.mortality_val,
+		hypertension[0]?.mortality_val,
+		cholesterol[0]?.mortality_val,
+		diabetes[0]?.mortality_val,
+		cancerResults[0]?.mortality_val,
+		lungs[0]?.mortality_val,
+		kidney[0]?.mortality_val,
+		suicide[0]?.mortality_val,
+		mentalIssues[0]?.mortality_val,
+		lead[0]?.mortality_val,
+		neurologicalDis[0]?.mortality_val,
+		painManagement[0]?.mortality_val,
+		heart[0]?.mortality_val,
+		drugAbuse[0]?.mortality_val
+	);
+	console.log("Mortality===RateMortalityRate", MortalityRate);
 	console.log(valueList);
 	console.log("LifeExpectancy ====>", LifeExpectancy);
 	var ImpactValue = await [].concat.apply([], valueList);
@@ -123,5 +148,9 @@ module.exports = async function MedicalHpUnhedge(
 	);
 	let med = MdInitialBaseValues.reduce((a, b) => a + b, 0);
 
-	return { medicalUnhedge: med, medLifeExpect: LifeExpectancy };
+	return {
+		medicalUnhedge: med,
+		medLifeExpect: LifeExpectancy,
+		MortalityValue: MortalityRate,
+	};
 };

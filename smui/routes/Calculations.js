@@ -21,6 +21,7 @@ const CommissionStructureLevel = require("../controllers/CommissionStructureLeve
 const CostOfInsuranceController = require("../controllers/CostOfInsuranceController");
 const AverageLifeExpect = require("../controllers/AverageLifeExpect");
 const YourLifeExpect = require("../controllers/YourLifeExpect");
+const Mortality = require("../controllers/MortalityController");
 var connection = config.connection;
 router.post("/calculations", async (req, res) => {
 	console.log(req.body);
@@ -51,8 +52,9 @@ router.post("/calculations", async (req, res) => {
 		const result = await Section(age, sex);
 		const MedSection = await MedicalHpUnhedge(
 			result,
-			req.body.medicalData,
-			sex
+			req.body?.medicalData,
+			sex,
+			req.body?.personalInformation?.weightBMI
 		);
 		const lifestyleUnhedge = await LifeStyleUnhedge(
 			result,
@@ -85,6 +87,12 @@ router.post("/calculations", async (req, res) => {
 			financialRiskUnhedge.finvaluesExpect,
 			insurancerating.insLifeExpect,
 			Avg_life
+		);
+		let Mortality_Controller = await Mortality(
+			MedSection.MortalityValue,
+			lifestyleUnhedge.MortalityValue,
+			legalRisk.MortalityValue,
+			sex
 		);
 		console.log("yourAvgExpect", yourAvgExpect);
 		console.log("Medical", MedSection);
@@ -155,7 +163,7 @@ router.post("/calculations", async (req, res) => {
 					AveragLifeExpect: Avg_life,
 					YourLifeExpect: yourAvgExpect,
 				},
-				MortalityRate: "",
+				MortalityRate: Mortality_Controller,
 			});
 			console.log({
 				key: "LCP_Without_AI",
@@ -238,7 +246,7 @@ router.post("/calculations", async (req, res) => {
 					AveragLifeExpect: Avg_life,
 					YourLifeExpect: yourAvgExpect,
 				},
-				MortalityRate: "",
+				MortalityRate: Mortality_Controller,
 			});
 			console.log({
 				key: "LCP_With_AI",

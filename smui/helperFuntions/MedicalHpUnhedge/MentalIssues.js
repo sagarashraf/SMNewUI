@@ -11,7 +11,7 @@ module.exports = async function MentalIssues(object, sex) {
 			let yearLevelImpact = await JsonConverter(
 				await SqlQueryHandler(yearsLevelQuery)
 			);
-			let type = `select impact, life_exp_val from mental_issues_options where gender= "${sex}" and option_ = "${object.type}" `;
+			let type = `select impact, life_exp_val, mortality_val from mental_issues_options where gender= "${sex}" and option_ = "${object.type}" `;
 			let typeImpact = await JsonConverter(await SqlQueryHandler(type));
 			let totalImpact =
 				yesStateImpact[0].impact +
@@ -24,12 +24,13 @@ module.exports = async function MentalIssues(object, sex) {
 						yesStateImpact[0]?.life_exp_val +
 						yearLevelImpact[0]?.life_exp_val +
 						typeImpact[0]?.life_exp_val,
+					mortality_val: typeImpact[0]?.mortality_val,
 				},
 			];
 		case 0:
 			noQuery = `select impact, life_exp_val from mental_issues where gender= "${sex}" and option_ = "0"`;
 			let noStateimpact = await JsonConverter(await SqlQueryHandler(noQuery));
-
+			noStateimpact[0].mortality_val = 0;
 			return noStateimpact;
 		default:
 			break;

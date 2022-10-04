@@ -11,6 +11,7 @@ module.exports = async function LegalRiskUnhedge(
 ) {
 	var valueList = [];
 	var legalExpectancy = [];
+	var MortalityRate = [];
 	// const drivingInfractions = await DrivingInfractions(data.infractions, sex);
 	const criminalCharges = await CriminalCharges(data.criminal, sex);
 	console.log("criminalCharges", criminalCharges);
@@ -32,6 +33,13 @@ module.exports = async function LegalRiskUnhedge(
 		drivinghistory[0]?.life_exp_val
 	);
 	console.log("legalExpectancy legal risk", legalExpectancy);
+
+	MortalityRate.push(
+		assault[0]?.mortality_val,
+		criminalCharges[0]?.mortality_val,
+		drivinghistory[0]?.mortality_val
+	);
+	console.log("MortalityRate legal risk====?", MortalityRate);
 	var ImpactValue = await [].concat.apply([], valueList);
 	MdInitialBaseValues = await ImpactValue.map(
 		(x) => x * sectionBaseWeightage[2]
@@ -40,5 +48,6 @@ module.exports = async function LegalRiskUnhedge(
 	return {
 		legalStyleUnhedge: legalStyle,
 		legalStyleExpect: legalExpectancy,
+		MortalityValue: MortalityRate,
 	};
 };

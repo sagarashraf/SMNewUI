@@ -10,7 +10,7 @@ module.exports = async function Cholesterol(object, sex) {
 		);
 		return cholesterolimpact;
 	} else {
-		cholesterolQuery = `select impact, life_exp_val from high_chols where gender= "${sex}" and option_ = "${state}"`;
+		cholesterolQuery = `select impact, life_exp_val, mortality_val from high_chols where gender= "${sex}" and option_ = "${state}"`;
 		let cholesterolimpact = await JsonConverter(
 			await SqlQueryHandler(cholesterolQuery)
 		);
@@ -26,6 +26,7 @@ module.exports = async function Cholesterol(object, sex) {
 				life_exp_val:
 					cholesterolimpact[0]?.life_exp_val +
 					cholesterolyearsimpact[0]?.life_exp_val,
+				mortality_val: cholesterolimpact[0]?.mortality_val,
 			},
 		];
 	}

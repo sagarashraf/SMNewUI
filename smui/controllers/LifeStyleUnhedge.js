@@ -15,6 +15,7 @@ module.exports = async function LifeStyleUnhedge(
 ) {
 	var valueList = [];
 	var LifeExpectancy = [];
+	var MortalityRate = [];
 	const physicallyActive = await PhysicallyActive(data.phyActive, sex);
 	console.log("physicallyActive", physicallyActive);
 	const fruitVegies = await FruitVeg(data.fruitVeg, sex);
@@ -53,6 +54,12 @@ module.exports = async function LifeStyleUnhedge(
 		fruitVegies[0]?.life_exp_val,
 		physicallyActive[0]?.life_exp_val
 	);
+	MortalityRate.push(
+		physicalDisabilities[0]?.mortality_val,
+		tobacco[0]?.mortality_val,
+		drugAbused[0]?.mortality_val
+	);
+	console.log("Mortality Rate------? ", MortalityRate);
 	console.log("LifeExpectancy life style", LifeExpectancy);
 	var ImpactValue = await [].concat.apply([], valueList);
 	MdInitialBaseValues = await ImpactValue.map(
@@ -62,5 +69,6 @@ module.exports = async function LifeStyleUnhedge(
 	return {
 		lifeStyleUnhedge: lifeStyle,
 		lifeStyleExpect: LifeExpectancy,
+		MortalityValue: MortalityRate,
 	};
 };
