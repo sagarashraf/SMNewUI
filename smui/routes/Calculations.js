@@ -172,13 +172,13 @@ router.post("/calculations", async (req, res) => {
 				CommStructureLevelUnhedge,
 				CommStructureLevelhedge,
 				BaseRateQoutation: base_rate_quote,
-				CostOfInsuranceQoutation: "",
-				CostOfInsurancePaymentAmount: "",
+				CostOfInsuranceQoutation: COI.coi_quote,
+				CostOfInsurancePaymentAmount: COI.amount,
 				LifeExpectency: {
-					AveragLifeExpect: "",
-					YourLifeExpect: "",
+					AveragLifeExpect: Avg_life,
+					YourLifeExpect: yourAvgExpect,
 				},
-				MortalityRate: "",
+				MortalityRate: Mortality_Controller,
 			});
 		} else {
 			// For Unhedge date and Percent Step LCP
@@ -255,13 +255,13 @@ router.post("/calculations", async (req, res) => {
 				CommStructureLevelUnhedge,
 				CommStructureLevelhedge,
 				BaseRateQoutation: base_rate_quote,
-				CostOfInsuranceQoutation: COI.coi_quote,
-				CostOfInsurancePaymentAmount: COI.amount,
+				CostOfInsuranceQoutation: "",
+				CostOfInsurancePaymentAmount: "",
 				LifeExpectency: {
-					AveragLifeExpect: "",
-					YourLifeExpect: "",
+					AveragLifeExpect: Avg_life,
+					YourLifeExpect: yourAvgExpect,
 				},
-				MortalityRate: "",
+				MortalityRate: Mortality_Controller,
 			});
 		}
 	} else {
