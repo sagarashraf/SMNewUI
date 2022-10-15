@@ -7,8 +7,18 @@ module.exports = async function LCP_Min_Max_Quotes(
 	pmntMode,
 	pmntAmount,
 	base_rate_max,
-	base_rate_min
+	base_rate_min,
+	text
 ) {
+	console.log(
+		pmntStartDate,
+		pmntEndDate,
+		pmntMode,
+		pmntAmount,
+		base_rate_max,
+		base_rate_min,
+		text
+	);
 	try {
 		var sum = base_rate_min;
 		var sumc = base_rate_max;
@@ -27,6 +37,7 @@ module.exports = async function LCP_Min_Max_Quotes(
 				pmntStartDate.getMonth() +
 				12 * (pmntEndDate.getFullYear() - pmntStartDate.getFullYear());
 			m = 12.0;
+			console.log(freq, "monthlyfreq");
 		}
 		if (pmntMode == "Quarterly") {
 			var beginDate = Moment(pmntStartDate);

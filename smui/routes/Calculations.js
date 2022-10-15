@@ -104,12 +104,19 @@ router.post("/calculations", async (req, res) => {
 		if (percentStep == 0) {
 			//For Unhedge Date
 			let LCPWithoutAIUnhedge = await LCPQuotesWithoutPercentStep(
+				// new Date("01/01/2039"),
+				// new Date("01/03/2063"),
+				// "Monthly",
+				// 10000,
+				// 0.2,
+				// 0.3,
 				pmntstartdate,
 				pmntEndDate_unhedge,
 				pmntMode,
 				pmntAmount,
 				totalBase.maxBaseRate,
-				totalBase.minBaseRate
+				totalBase.minBaseRate,
+				"unhed==========?"
 			);
 			let base_rate_quote = await LCPSingleQuoteWithoutPercentStep(
 				pmntstartdate,
@@ -125,12 +132,18 @@ router.post("/calculations", async (req, res) => {
 			);
 			//For hedge Date
 			var LCPWithoutAIhedge = await LCPQuotesWithoutPercentStep(
-				pmntstartdate,
-				pmntEndDate_hedge,
-				pmntMode,
-				pmntAmount,
+				new Date("01/01/2039"),
+				new Date("01/05/2053"),
+				"Monthly",
+				10000,
+
+				// pmntstartdate,
+				// pmntEndDate_hedge,
+				// pmntMode,
+				// pmntAmount,
 				0.104,
-				0.094
+				0.094,
+				"hed==========?"
 			);
 			let CommStructureLevelhedge = await CommissionStructureLevel(
 				base_rate_quote.LCPSingleQuoteWithoutAI,
