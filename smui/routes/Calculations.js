@@ -240,8 +240,9 @@ router.post("/calculations", async (req, res) => {
 				CommStructureLevelUnhedge,
 				CommStructureLevelhedge,
 				BaseRateQoutation: base_rate_quote,
-				CostOfInsuranceQoutation: "",
-				CostOfInsurancePaymentAmount: "",
+				CostOfInsuranceQoutation: COI.coi_quote,
+				CostOfInsurancePaymentAmount: COI.amount,
+
 				LifeExpectency: {
 					AveragLifeExpect: Avg_life,
 					YourLifeExpect: yourAvgExpect,
@@ -255,8 +256,8 @@ router.post("/calculations", async (req, res) => {
 				CommStructureLevelUnhedge,
 				CommStructureLevelhedge,
 				BaseRateQoutation: base_rate_quote,
-				CostOfInsuranceQoutation: "",
-				CostOfInsurancePaymentAmount: "",
+				CostOfInsuranceQoutation: COI.coi_quote,
+				CostOfInsurancePaymentAmount: COI.amount,
 				LifeExpectency: {
 					AveragLifeExpect: Avg_life,
 					YourLifeExpect: yourAvgExpect,

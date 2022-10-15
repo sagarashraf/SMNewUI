@@ -1,4 +1,5 @@
 const Moment = require("moment");
+const DateDiff = require("../helperFuntions/DateDiff");
 //function for calculation of LCP with Percent Step
 module.exports = async function LCP_Min_Max_Quotes_AI(
 	pmntStartDate,
@@ -113,13 +114,10 @@ module.exports = async function LCP_Min_Max_Quotes_AI(
 			bensum = bensum + pvabb[p];
 		}
 
-		
-
-		var pvad = DateDiff(pmntEndDate, pmntStartDate);
-		pssum = pssum/(1+ann_interest_rate)**(pvad/365)
-		pssumc = pssumc/(1+ann_interest_rate_c)**(pvad/365)
-		bensum = bensum/(1+ann_interest_rate_b)**(pvad/365)
-
+		var pvad = await DateDiff(pmntEndDate, pmntStartDate);
+		pssum = pssum / (1 + ann_interest_rate) ** (pvad / 365);
+		pssumc = pssumc / (1 + ann_interest_rate_c) ** (pvad / 365);
+		bensum = bensum / (1 + ann_interest_rate_b) ** (pvad / 365);
 
 		console.log("Min Quote with Percent Step: ", pssum);
 		console.log("Max Quote with Percent Step: ", pssumc);
@@ -201,10 +199,10 @@ module.exports = async function LCP_Min_Max_Quotes_AI(
 		}
 		//console.log(pssumc);
 
-		var pvad = DateDiff(pmntEndDate, pmntStartDate);
-		pssum = pssum/(1+ann_interest_rate)**(pvad/365)
-		pssumc = pssumc/(1+ann_interest_rate_c)**(pvad/365)
-		bensum = bensum/(1+ann_interest_rate_b)**(pvad/365)
+		var pvad = await DateDiff(pmntEndDate, pmntStartDate);
+		pssum = pssum / (1 + ann_interest_rate) ** (pvad / 365);
+		pssumc = pssumc / (1 + ann_interest_rate_c) ** (pvad / 365);
+		bensum = bensum / (1 + ann_interest_rate_b) ** (pvad / 365);
 
 		console.log("Max Quote with Percent Step: ", pssum);
 		console.log("Min Quote with Percent Step: ", pssumc);
