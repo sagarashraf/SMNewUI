@@ -50,7 +50,7 @@ module.exports = async function LCP_Min_Max_Quotes(
 		var pva = payments + (payments * (1 - (1 + r) ** -(freq - 1))) / r;
 		var pvc = payments + (payments * (1 - (1 + rc) ** -(freq - 1))) / rc;
 		var benbb = payments + (payments * (1 - (1 + rb) ** -(freq - 1))) / rb;
-
+		console.log("pva pvc before date", pva, pvc);
 		var ann_interest_rate = (1 + sum / m) ** m - 1;
 		var ann_interest_rate_c = (1 + sumc / m) ** m - 1;
 		var ann_interest_rate_b = (1 + 0.054 / m) ** m - 1;
