@@ -20,7 +20,7 @@ module.exports = async function InsuranceRatingUnhedge(
 	console.log("LifeExpectancy rating====>", LifeExpectancy);
 	var ImpactValue = await [].concat.apply([], valueList);
 	MdInitialBaseValues = await ImpactValue.map(
-		(x) => x * sectionBaseWeightage[4]
+		(x) => x * sectionBaseWeightage[3]
 	);
 	let ins = MdInitialBaseValues.reduce((a, b) => a + b, 0);
 	return { insUnhedge: ins, insLifeExpect: LifeExpectancy };

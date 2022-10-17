@@ -19,7 +19,7 @@ module.exports = async function FinancialRiskUnhedge(
 	console.log("FinanExpectancy ---> financial ", FinanExpectancy);
 	var ImpactValue = await [].concat.apply([], valueList);
 	MdInitialBaseValues = await ImpactValue.map(
-		(x) => x * sectionBaseWeightage[3]
+		(x) => x * sectionBaseWeightage[4]
 	);
 	let finvalues = MdInitialBaseValues.reduce((a, b) => a + b, 0);
 	return {

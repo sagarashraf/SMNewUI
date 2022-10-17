@@ -5,6 +5,14 @@ module.exports = async function TotalBaseRate(
 	financialrisk,
 	insurance
 ) {
+	console.log(
+		"Medical, lifestyle, legalrisk, financialrisk, insurance",
+		Medical,
+		lifestyle,
+		legalrisk,
+		financialrisk,
+		insurance
+	);
 	var valueList = [];
 	valueList.push(Medical, lifestyle, legalrisk, financialrisk, insurance);
 	var ImpactValue = await [].concat.apply([], valueList);

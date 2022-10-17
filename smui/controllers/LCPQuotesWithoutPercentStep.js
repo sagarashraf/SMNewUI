@@ -7,8 +7,18 @@ module.exports = async function LCP_Min_Max_Quotes(
 	pmntMode,
 	pmntAmount,
 	base_rate_max,
-	base_rate_min
+	base_rate_min,
+	text
 ) {
+	console.log(
+		pmntStartDate,
+		pmntEndDate,
+		pmntMode,
+		pmntAmount,
+		base_rate_max,
+		base_rate_min,
+		text
+	);
 	try {
 		var sum = base_rate_min;
 		var sumc = base_rate_max;
@@ -27,6 +37,7 @@ module.exports = async function LCP_Min_Max_Quotes(
 				pmntStartDate.getMonth() +
 				12 * (pmntEndDate.getFullYear() - pmntStartDate.getFullYear());
 			m = 12.0;
+			console.log(freq, "monthlyfreq");
 		}
 		if (pmntMode == "Quarterly") {
 			var beginDate = Moment(pmntStartDate);
@@ -50,7 +61,7 @@ module.exports = async function LCP_Min_Max_Quotes(
 		var pva = payments + (payments * (1 - (1 + r) ** -(freq - 1))) / r;
 		var pvc = payments + (payments * (1 - (1 + rc) ** -(freq - 1))) / rc;
 		var benbb = payments + (payments * (1 - (1 + rb) ** -(freq - 1))) / rb;
-
+		console.log("pva pvc before date", pva, pvc);
 		var ann_interest_rate = (1 + sum / m) ** m - 1;
 		var ann_interest_rate_c = (1 + sumc / m) ** m - 1;
 		var ann_interest_rate_b = (1 + 0.054 / m) ** m - 1;

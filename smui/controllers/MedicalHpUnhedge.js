@@ -139,7 +139,12 @@ module.exports = async function MedicalHpUnhedge(
 		heart[0]?.mortality_val,
 		drugAbuse[0]?.mortality_val
 	);
-	console.log("Mortality===RateMortalityRate", MortalityRate);
+	console.log(
+		"Mortality===RateMortalityRate",
+		MortalityRate,
+		"base rate weightage",
+		sectionBaseWeightage
+	);
 	console.log(valueList);
 	console.log("LifeExpectancy ====>", LifeExpectancy);
 	var ImpactValue = await [].concat.apply([], valueList);
