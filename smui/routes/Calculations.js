@@ -132,15 +132,10 @@ router.post("/calculations", async (req, res) => {
 			);
 			//For hedge Date
 			var LCPWithoutAIhedge = await LCPQuotesWithoutPercentStep(
-				new Date("01/01/2039"),
-				new Date("01/05/2053"),
-				"Monthly",
-				10000,
-
-				// pmntstartdate,
-				// pmntEndDate_hedge,
-				// pmntMode,
-				// pmntAmount,
+				pmntstartdate,
+				pmntEndDate_hedge,
+				pmntMode,
+				pmntAmount,
 				0.104,
 				0.094,
 				"hed==========?"

@@ -28,6 +28,7 @@ module.exports = async function LCP_Min_Max_Quotes_AI(
 			pmntEndDate.getMonth() -
 			pmntStartDate.getMonth() +
 			12 * (pmntEndDate.getFullYear() - pmntStartDate.getFullYear());
+		freq++;
 		m = 12.0;
 	}
 	if (pmntMode == "Quarterly") {
@@ -114,7 +115,7 @@ module.exports = async function LCP_Min_Max_Quotes_AI(
 			bensum = bensum + pvabb[p];
 		}
 
-		var pvad = await DateDiff(pmntEndDate, pmntStartDate);
+		var pvad = await DateDiff(new Date(), pmntStartDate);
 		pssum = pssum / (1 + ann_interest_rate) ** (pvad / 365);
 		pssumc = pssumc / (1 + ann_interest_rate_c) ** (pvad / 365);
 		bensum = bensum / (1 + ann_interest_rate_b) ** (pvad / 365);
@@ -199,7 +200,7 @@ module.exports = async function LCP_Min_Max_Quotes_AI(
 		}
 		//console.log(pssumc);
 
-		var pvad = await DateDiff(pmntEndDate, pmntStartDate);
+		var pvad = await DateDiff(new Date(), pmntStartDate);
 		pssum = pssum / (1 + ann_interest_rate) ** (pvad / 365);
 		pssumc = pssumc / (1 + ann_interest_rate_c) ** (pvad / 365);
 		bensum = bensum / (1 + ann_interest_rate_b) ** (pvad / 365);

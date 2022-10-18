@@ -37,7 +37,9 @@ module.exports = async function LCP_Min_Max_Quotes(
 				pmntStartDate.getMonth() +
 				12 * (pmntEndDate.getFullYear() - pmntStartDate.getFullYear());
 			m = 12.0;
-			console.log(freq, "monthlyfreq");
+			console.log("freq before", freq);
+			freq++;
+			console.log(freq, "freq after");
 		}
 		if (pmntMode == "Quarterly") {
 			var beginDate = Moment(pmntStartDate);
@@ -66,7 +68,7 @@ module.exports = async function LCP_Min_Max_Quotes(
 		var ann_interest_rate_c = (1 + sumc / m) ** m - 1;
 		var ann_interest_rate_b = (1 + 0.054 / m) ** m - 1;
 
-		var pvad = await DateDiff(pmntEndDate, pmntStartDate);
+		var pvad = await DateDiff(new Date(), pmntStartDate);
 		pva = pva / (1 + ann_interest_rate) ** (pvad / 365);
 		pvc = pvc / (1 + ann_interest_rate_c) ** (pvad / 365);
 		benbb = benbb / (1 + ann_interest_rate_b) ** (pvad / 365);
