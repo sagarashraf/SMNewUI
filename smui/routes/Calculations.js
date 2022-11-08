@@ -23,6 +23,7 @@ const AverageLifeExpect = require("../controllers/AverageLifeExpect");
 const YourLifeExpect = require("../controllers/YourLifeExpect");
 const Mortality = require("../controllers/MortalityController");
 const SqlQueryHandler = require("../helperFuntions/SqlQueryHandler");
+const JsonConverter = require("../helperFuntions/JsonConverter");
 var connection = config.connection;
 router.post("/calculations", async (req, res) => {
 	console.log(req.body);
@@ -42,6 +43,11 @@ router.post("/calculations", async (req, res) => {
 	console.log("F", percentStep);
 	console.log("G", pmntMode);
 	console.log("header", req.headers);
+
+	var totalBase;
+	var LCPWithoutAIUnhedge;
+	var LCPWithAIUnhedge;
+	var base_rate_quote;
 
 
 	
@@ -76,7 +82,7 @@ router.post("/calculations", async (req, res) => {
 			req.body.insurance,
 			sex
 		);
-		const totalBase = await TotalBaseRate(
+		 totalBase = await TotalBaseRate(
 			MedSection.medicalUnhedge,
 			lifestyleUnhedge.lifeStyleUnhedge,
 			legalRisk.legalStyleUnhedge,
@@ -107,7 +113,7 @@ router.post("/calculations", async (req, res) => {
 		console.log("total Base ", totalBase);
 		if (percentStep == 0) {
 			//For Unhedge Date
-			let LCPWithoutAIUnhedge = await LCPQuotesWithoutPercentStep(
+			 LCPWithoutAIUnhedge = await LCPQuotesWithoutPercentStep(
 				// new Date("01/01/2039"),
 				// new Date("01/03/2063"),
 				// "Monthly",
@@ -122,7 +128,7 @@ router.post("/calculations", async (req, res) => {
 				totalBase.minBaseRate,
 				"unhed==========?"
 			);
-			let base_rate_quote = await LCPSingleQuoteWithoutPercentStep(
+			base_rate_quote = await LCPSingleQuoteWithoutPercentStep(
 				pmntstartdate,
 				pmntEndDate_unhedge,
 				pmntMode,
@@ -135,7 +141,7 @@ router.post("/calculations", async (req, res) => {
 				LCPWithoutAIUnhedge.LCPMinQuotesWithoutAI
 			);
 			//For hedge Date
-			var LCPWithoutAIhedge = await LCPQuotesWithoutPercentStep(
+			LCPWithoutAIhedge = await LCPQuotesWithoutPercentStep(
 				pmntstartdate,
 				pmntEndDate_hedge,
 				pmntMode,
@@ -194,7 +200,7 @@ router.post("/calculations", async (req, res) => {
 			});
 		} else {
 			// For Unhedge date and Percent Step LCP
-			let LCPWithAIUnhedge = await LCPQuotesWithPercentStep(
+			LCPWithAIUnhedge = await LCPQuotesWithPercentStep(
 				pmntstartdate,
 				pmntEndDate_unhedge,
 				pmntMode,
@@ -204,7 +210,7 @@ router.post("/calculations", async (req, res) => {
 				percentStep
 			);
 
-			let base_rate_quote = await LCPSingleQuoteWithPercentStep(
+			 base_rate_quote = await LCPSingleQuoteWithPercentStep(
 				pmntstartdate,
 				pmntEndDate_unhedge,
 				pmntMode,
@@ -261,6 +267,7 @@ router.post("/calculations", async (req, res) => {
 				},
 				MortalityRate: Mortality_Controller,
 			});
+
 			console.log({
 				key: "LCP_With_AI",
 				LCPWithAIUnhedge,
@@ -506,13 +513,70 @@ router.post("/calculations", async (req, res) => {
 	 '${req.body.medicalData.drug.type}')`;
 
 
-	 
-
-
-
+	
 
 
 let ins_result = await SqlQueryHandler(insert);
+
+// IF INSERTION SUCCESSFUL.
+const select = `SELECT  ID FROM bhq_form_data ORDER BY ID DESC LIMIT 1`;
+let selresult =  await JsonConverter(await SqlQueryHandler(select));
+console.log("selresult",selresult[0]?.ID)
+
+
+
+if(req.body.paymentInfo.annualIncrese <= 0){
+	const LCP_Without_AI_Inst = `INSERT INTO bhq_unhedge_quotes
+(id,
+base_rate,
+min_rate,
+max_rate,
+base_quote,
+min_quote,
+max_quote,
+fam_pro,
+fam_pro_rate,
+ins_term)
+VALUES
+('${selresult[0]?.ID}',
+'${totalBase.originalBaseRate}',
+'${totalBase.minBaseRate}',
+'${totalBase.maxBaseRate}',
+'${base_rate_quote.LCPSingleQuoteWithoutAI}',
+'${LCPWithoutAIUnhedge.LCPMinQuotesWithoutAI}',
+'${LCPWithoutAIUnhedge.LCPMaxQuotesWithoutAI}',
+'${LCPWithoutAIUnhedge.LCPBEN}',
+'0.0',
+'30 YEAR TERM');` 
+	let lcpwoai =  await JsonConverter(await SqlQueryHandler(LCP_Without_AI_Inst));
+}
+else{
+	const LCP_With_AI_Inst = `INSERT INTO bhq_unhedge_quotes
+(id,
+base_rate,
+min_rate,
+max_rate,
+base_quote,
+min_quote,
+max_quote,
+fam_pro,
+fam_pro_rate,
+ins_term)
+VALUES
+('${selresult[0]?.ID}',
+'${totalBase.originalBaseRate}',
+'${totalBase.minBaseRate}',
+'${totalBase.maxBaseRate}',
+'${base_rate_quote.LCPSingleQuoteWithAI}',
+'${LCPWithAIUnhedge.LCPMinQuotesWithAI}',
+'${LCPWithAIUnhedge.LCPMaxQuotesWithAI}',
+'${LCPWithAIUnhedge.LCPBEN}',
+'0.0',
+'30 YEAR TERM');` 
+let lcpwoai =  await JsonConverter(await SqlQueryHandler(LCP_With_AI_Inst));
+}
+
+
 });
 
 //function for calculation of GP with Percent Step
