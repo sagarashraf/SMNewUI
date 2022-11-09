@@ -48,6 +48,7 @@ router.post("/calculations", async (req, res) => {
 	var LCPWithoutAIUnhedge;
 	var LCPWithAIUnhedge;
 	var base_rate_quote;
+	var CommStructureLevelUnhedge;
 
 
 	
@@ -135,7 +136,7 @@ router.post("/calculations", async (req, res) => {
 				pmntAmount,
 				totalBase.originalBaseRate
 			);
-			let CommStructureLevelUnhedge = await CommissionStructureLevel(
+			CommStructureLevelUnhedge = await CommissionStructureLevel(
 				base_rate_quote.LCPSingleQuoteWithoutAI,
 				LCPWithoutAIUnhedge.LCPMaxQuotesWithoutAI,
 				LCPWithoutAIUnhedge.LCPMinQuotesWithoutAI
@@ -219,7 +220,7 @@ router.post("/calculations", async (req, res) => {
 				percentStep
 			);
 
-			let CommStructureLevelUnhedge = await CommissionStructureLevel(
+			 CommStructureLevelUnhedge = await CommissionStructureLevel(
 				base_rate_quote.LCPSingleQuoteWithAI,
 				LCPWithAIUnhedge.LCPMinQuotesWithAI,
 				LCPWithAIUnhedge.LCPMaxQuotesWithAI
@@ -549,7 +550,76 @@ VALUES
 '0.0',
 '30 YEAR TERM');` 
 	let lcpwoai =  await JsonConverter(await SqlQueryHandler(LCP_Without_AI_Inst));
+
+	const LCP_Without_AI_Inst_hedge = `INSERT INTO bhq_hedge_quotes
+(id,
+base_rate,
+min_rate,
+max_rate,
+base_quote,
+min_quote,
+max_quote,
+fam_pro,
+fam_pro_rate,
+ins_term)
+VALUES
+('${selresult[0]?.ID}',
+'${totalBase.originalBaseRate}',
+'${totalBase.minBaseRate}',
+'${totalBase.maxBaseRate}',
+'${base_rate_quote.LCPSingleQuoteWithoutAI}',
+'${LCPWithoutAIhedge.LCPMinQuotesWithoutAI}',
+'${LCPWithoutAIhedge.LCPMaxQuotesWithoutAI}',
+'${LCPWithoutAIhedge.LCPBEN}',
+'0.0',
+'30 YEAR TERM');` 
+	let lcpwoaih =  await JsonConverter(await SqlQueryHandler(LCP_Without_AI_Inst_hedge));
+
+	//console.log("bitch",CommStructureLevelUnhedge)
+
+let unhedge_comm_struct  = `INSERT INTO bhq_unhedge_comm_struct
+(id,
+cost_of_deal,
+comm_l1_r5_min,
+comm_l1_r5_max,
+comm_l1_cr5_min,
+comm_l1_cr5_max,
+comm_l2_r10_min,
+comm_l2_r10_max,
+comm_l2_cr10_min,
+comm_l2_cr10_max,
+comm_l3_r15_min,
+comm_l3_r15_max,
+comm_l3_cr15_min,
+comm_l3_cr15_max)
+VALUES
+('${selresult[0]?.ID}',
+'7500',
+'${CommStructureLevelUnhedge.levelFiveMinSimple}',
+'${CommStructureLevelUnhedge.levelFiveMaxSimple}',
+'${CommStructureLevelUnhedge.levelFiveMinCompany}',
+'${CommStructureLevelUnhedge.levelFiveMaxCompany}',
+'${CommStructureLevelUnhedge.levelTenMinSimple}',
+'${CommStructureLevelUnhedge.levelFiveMaxSimple}',
+'${CommStructureLevelUnhedge.levelTenMinCompany}',
+'${CommStructureLevelUnhedge.levelTenMaxCompany}',
+'${CommStructureLevelUnhedge.levelTewMinSimple}',
+'${CommStructureLevelUnhedge.levelTewMaxSimple}',
+'${CommStructureLevelUnhedge.levelTewMinCompany}',
+'${CommStructureLevelUnhedge.levelTewMaxCompany}');`
+
+let unhed_comm =  await JsonConverter(await SqlQueryHandler(unhedge_comm_struct));
+
+
+
+
+
 }
+
+
+
+
+
 else{
 	const LCP_With_AI_Inst = `INSERT INTO bhq_unhedge_quotes
 (id,
@@ -571,10 +641,75 @@ VALUES
 '${LCPWithAIUnhedge.LCPMinQuotesWithAI}',
 '${LCPWithAIUnhedge.LCPMaxQuotesWithAI}',
 '${LCPWithAIUnhedge.LCPBEN}',
-'0.0',
+'0.05',
 '30 YEAR TERM');` 
 let lcpwoai =  await JsonConverter(await SqlQueryHandler(LCP_With_AI_Inst));
+
+const LCP_With_AI_Inst_hedge = `INSERT INTO bhq_hedge_quotes
+(id,
+base_rate,
+min_rate,
+max_rate,
+base_quote,
+min_quote,
+max_quote,
+fam_pro,
+fam_pro_rate,
+ins_term)
+VALUES
+('${selresult[0]?.ID}',
+'${totalBase.originalBaseRate}',
+'${totalBase.minBaseRate}',
+'${totalBase.maxBaseRate}',
+'${base_rate_quote.LCPSingleQuoteWithAI}',
+'${LCPWithAIhedge.LCPMinQuotesWithAI}',
+'${LCPWithAIhedge.LCPMaxQuotesWithAI}',
+'${LCPWithAIhedge.LCPBEN}',
+'0.05',
+'30 YEAR TERM');` 
+let lcpwoaih =  await JsonConverter(await SqlQueryHandler(LCP_With_AI_Inst_hedge));
+
+let unhedge_comm_struct  = `INSERT INTO bhq_unhedge_comm_struct
+(id,
+cost_of_deal,
+comm_l1_r5_min,
+comm_l1_r5_max,
+comm_l1_cr5_min,
+comm_l1_cr5_max,
+comm_l2_r10_min,
+comm_l2_r10_max,
+comm_l2_cr10_min,
+comm_l2_cr10_max,
+comm_l3_r15_min,
+comm_l3_r15_max,
+comm_l3_cr15_min,
+comm_l3_cr15_max)
+VALUES
+('${selresult[0]?.ID}',
+'7500',
+'${CommStructureLevelUnhedge.levelFiveMinSimple}',
+'${CommStructureLevelUnhedge.levelFiveMaxSimple}',
+'${CommStructureLevelUnhedge.levelFiveMinCompany}',
+'${CommStructureLevelUnhedge.levelFiveMaxCompany}',
+'${CommStructureLevelUnhedge.levelTenMinSimple}',
+'${CommStructureLevelUnhedge.levelFiveMaxSimple}',
+'${CommStructureLevelUnhedge.levelTenMinCompany}',
+'${CommStructureLevelUnhedge.levelTenMaxCompany}',
+'${CommStructureLevelUnhedge.levelTewMinSimple}',
+'${CommStructureLevelUnhedge.levelTewMaxSimple}',
+'${CommStructureLevelUnhedge.levelTewMinCompany}',
+'${CommStructureLevelUnhedge.levelTewMaxCompany}');`
+
+let unhed_comm =  await JsonConverter(await SqlQueryHandler(unhedge_comm_struct));
+
+
+
+
+
+
 }
+
+
 
 
 });
