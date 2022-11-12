@@ -24,13 +24,13 @@ module.exports = async function CommissionStructureLevelhedgeWithoutPS(
 	let max_com_rev_10_h = min_rev_10_h / 0.1 - max_rev_10_h;
 	object.levelTenMaxCompany = max_com_rev_10_h;
 	//Commission Level 3 for Revenue at 20%
-	let min_rev_20_h = ((base_rate_quote - cost_of_deal - min_quote) / 2) * 0.2;
+	let min_rev_20_h = ((base_rate_quote - cost_of_deal - min_quote) / 2) * 0.15;
 	object.levelTewMinSimple = min_rev_20_h;
-	let min_com_rev_20_h = min_rev_20_h / 0.2 - min_rev_20_h;
+	let min_com_rev_20_h = min_rev_20_h / 0.15 - min_rev_20_h;
 	object.levelTewMinCompany = min_com_rev_20_h;
-	let max_rev_20_h = ((base_rate_quote - cost_of_deal - max_quote) / 2) * 0.2;
+	let max_rev_20_h = ((base_rate_quote - cost_of_deal - max_quote) / 2) * 0.15;
 	object.levelTewMaxSimple = max_rev_20_h;
-	let max_com_rev_20_h = min_rev_20_h / 0.2 - max_rev_20_h;
+	let max_com_rev_20_h = min_rev_20_h / 0.15 - max_rev_20_h;
 	object.levelTewMaxCompany = max_com_rev_20_h;
 	return object;
 };
