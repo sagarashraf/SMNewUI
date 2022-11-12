@@ -9,7 +9,7 @@ let PaymentMode = [
 ];
 module.exports = async function BasicValidators(object) {
 	console.log(object, "testing validation");
-	let MedicalDataValidation = await ValidatorMedicalFormjs(object.medicalData);
+	let MedicalDataValidation = await ValidatorMedicalForm(object.medicalData);
 	if (object.age < 18 || object.age > 86) {
 		return "Age is not Valid";
 	} else if (object.gender != 0 && object.gender != 1) {

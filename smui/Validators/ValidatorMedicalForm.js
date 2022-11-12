@@ -1,4 +1,4 @@
-module.exports = async function ValidatorMedicalFormjs(objectType) {
+module.exports = async function ValidatorMedicalForm(objectType) {
 	for (var key in objectType) {
 		if (objectType["checkUp"] != 0 && objectType["checkUp"] != 1) {
 			return `Annual check-Up selected option is invalid`;
